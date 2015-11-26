@@ -1,1 +1,3 @@
-# .vim
+# My vim setup
+
+Still very much a work in progress...
