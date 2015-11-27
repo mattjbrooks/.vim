@@ -34,7 +34,7 @@ function FindRightmost(line)
   let line_num = a:line[s:top]
   let rightmost_pos = len(getline('.'))
   while line_num <= a:line[s:bottom]
-    execute "normal " . line_num . "gg"
+    execute "normal! " . line_num . "gg"
     let length_of_line = len(getline('.'))
     if length_of_line > rightmost_pos
       let rightmost_pos = length_of_line
@@ -48,8 +48,8 @@ function FindLeftmost(line, rightmost_pos)
   let line_num = a:line[s:top]
   let leftmost_col = a:rightmost_pos
   while line_num <= a:line[s:bottom]
-    execute "normal " . line_num . "gg"
-    normal ^
+    execute "normal! " . line_num . "gg"
+    normal! ^
     let col_start = col('.')
     let current_line = getline('.')
     if col_start < leftmost_col && current_line !~ '^\s*$'
@@ -64,7 +64,7 @@ function CheckIfUncommented(line, position, comment)
   let line_num = a:line[s:top]
   let has_line_without_comment = 0
   while line_num <= a:line[s:bottom]
-    execute "normal " . line_num . "gg"
+    execute "normal! " . line_num . "gg"
     let current_line = getline('.')
     let slice_of_line = current_line[(a:position[s:left]):(a:position[s:right])]
     if slice_of_line != a:comment && current_line !~ '^\s*$'
@@ -76,32 +76,32 @@ function CheckIfUncommented(line, position, comment)
 endfunction
 
 function AddCommentStart(line_num, left_pos, comment)
-  execute "normal " . a:line_num . "gg"
+  execute "normal! " . a:line_num . "gg"
   let current_line = getline('.')
   if current_line !~ '^\s*$'
     if a:left_pos == 0
-      execute "normal 0i" . a:comment
+      execute "normal! 0i" . a:comment
     else
-      execute "normal" . a:left_pos . "\|"
-      execute "normal a" . a:comment
+      execute "normal!" . a:left_pos . "\|"
+      execute "normal! a" . a:comment
     endif
   endif
 endfunction
 
 function RemoveCommentStart(line_num, position, comment, comment_length)
-  execute "normal " . a:line_num . "gg"
+  execute "normal! " . a:line_num . "gg"
   let current_line = getline('.')
   let slice_of_line = current_line[(a:position[s:left]):(a:position[s:right])]
   if slice_of_line == a:comment
-    normal ^
-    execute "normal " . a:comment_length . "x"
+    normal! ^
+    execute "normal! " . a:comment_length . "x"
   endif
 endfunction
 
 function RemoveSpacesIfEmpty()
   let current_line = getline('.')
   if current_line =~ '^\s*$'
-    normal 0d$
+    normal! 0d$
   endif
 endfunction
 
@@ -109,40 +109,40 @@ function PlaceComment(left_col, comment)
   let left_pos = a:left_col - 1
   if left_pos == 0
     " If at start of line insert
-    execute "normal 0i" . a:comment
+    execute "normal! 0i" . a:comment
   else
     " Otherwise append
-    execute "normal" . left_pos . "\|"
-    execute "normal a" . a:comment
+    execute "normal!" . left_pos . "\|"
+    execute "normal! a" . a:comment
   endif
 endfunction
 
 function AppendComment(comment)
-  execute "normal A" . a:comment
+  execute "normal! A" . a:comment
 endfunction
 
 function RepositionAfterAdd(original_pos, left_col, comment_length)
   if a:original_pos >= a:left_col
     " Keep position if over text when comment is added
     let new_pos = a:original_pos + a:comment_length
-    execute "normal " . new_pos . "\|"
+    execute "normal! " . new_pos . "\|"
   else
     " Unless we were originally in the white space before the text,
     " when we want to stay where we were:
-    execute "normal " . a:original_pos . "\|"
+    execute "normal! " . a:original_pos . "\|"
   endif
 endfunction
 
 function RemoveStartComment(comment_length)
-  normal ^
-  execute "normal " . a:comment_length . "x"
+  normal! ^
+  execute "normal! " . a:comment_length . "x"
 endfunction
 
 function RemoveEndComment(comment_length)
   if a:comment_length != 0
-    normal $
-    execute "normal " . (a:comment_length - 1) . "h"
-    execute "normal " . a:comment_length . "x"
+    normal! $
+    execute "normal! " . (a:comment_length - 1) . "h"
+    execute "normal! " . a:comment_length . "x"
   endif
 endfunction
 
@@ -150,11 +150,11 @@ function RepositionAfterRemove(original_pos, left_col, comment_length)
   if a:original_pos >= a:left_col + a:comment_length
     " Keep position if over text when comment is deleted
     let new_pos = a:original_pos - a:comment_length
-    execute "normal " . new_pos . "\|"
+    execute "normal! " . new_pos . "\|"
   else
     " Unless we were originally in the white space or the comment string
     " before the text, when we want to stay where we were:
-    execute "normal " . a:original_pos . "\|"
+    execute "normal! " . a:original_pos . "\|"
   endif
 endfunction
 
@@ -207,9 +207,9 @@ function VisualModeComment()
 
   let line = [0, 0]
   " Find start and end lines
-  normal \<Esc>`<
+  normal! \<Esc>`<
   let line[s:top] = line('.')
-  normal `>
+  normal! `>
   let line[s:bottom] = line('.')
 
   " Switch line_start and line_end if needed
@@ -265,18 +265,18 @@ function VisualModeComment()
     let has_comment = [[['',''],['','']],[['',''],['','']]]
     let slices = [[['',''],['','']],[['',''],['','']]]
 
-    execute "normal " . line[s:top] . "gg"
+    execute "normal! " . line[s:top] . "gg"
     let line_contents[s:top] = getline('.')
-    normal ^
+    normal! ^
     let column[s:top][s:left] = col('.')
-    normal $
+    normal! $
     let column[s:top][s:right] = col('.')
 
-    execute "normal " . line[s:bottom] . "gg"
+    execute "normal! " . line[s:bottom] . "gg"
     let line_contents[s:bottom] = getline('.')
-    normal ^
+    normal! ^
     let column[s:bottom][s:left] = col('.')
-    normal $
+    normal! $
     let column[s:bottom][s:right] = col('.')
 
     let slices[s:no_space][s:top] = GetSlices(line_contents[s:top], column[s:top], comment_len[s:no_space])
@@ -297,14 +297,14 @@ function VisualModeComment()
 
     " Add or remove comments as needed
     if has_comment[s:no_space][s:top][s:start] && has_comment[s:no_space][s:bottom][s:end]
-        execute "normal " . line[s:top] . "gg"
+        execute "normal! " . line[s:top] . "gg"
         if has_comment[s:added_space][s:top][s:start]
           call RemoveStartComment(comment_len[s:added_space][s:start])
         else
           call RemoveStartComment(comment_len[s:no_space][s:start])
         endif
         call RemoveSpacesIfEmpty()
-        execute "normal " . line[s:bottom] . "gg"
+        execute "normal! " . line[s:bottom] . "gg"
         if has_comment[s:added_space][s:bottom][s:end]
           call RemoveEndComment(comment_len[s:added_space][s:end])
         else
@@ -313,23 +313,23 @@ function VisualModeComment()
         call RemoveSpacesIfEmpty()
     else
       if !has_comment[s:no_space][s:top][s:start] && line_contents[s:top] !~ '^\s*$'
-        execute "normal " . line[s:top] . "gg"
+        execute "normal! " . line[s:top] . "gg"
         call PlaceComment(column[s:top][s:left], comment[s:added_space][s:start])
       endif
       if !has_comment[s:no_space][s:bottom][s:end] && line_contents[s:bottom] !~ '^\s*$'
-        execute "normal " . line[s:bottom] . "gg"
+        execute "normal! " . line[s:bottom] . "gg"
         call AppendComment(comment[s:added_space][s:end])
       endif
       if !has_comment[s:no_space][s:top][s:start] && line_contents[s:top] =~ '^\s*$'
-        execute "normal " . line[s:top] . "gg"
+        execute "normal! " . line[s:top] . "gg"
         call RemoveSpacesIfEmpty()
-        execute "normal 0i" . stringofspaces
+        execute "normal! 0i" . stringofspaces
         call AppendComment(comment[s:no_space][s:start])
       endif
       if !has_comment[s:no_space][s:bottom][s:end] && line_contents[s:bottom] =~ '^\s*$'
-        execute "normal " . line[s:bottom] . "gg"
+        execute "normal! " . line[s:bottom] . "gg"
         call RemoveSpacesIfEmpty()
-        execute "normal 0i" . stringofspaces
+        execute "normal! 0i" . stringofspaces
         call AppendComment(comment[s:no_space][s:end])
       endif
     endif
@@ -365,9 +365,9 @@ function SingleLineComment()
   if current_line !~ '^\s*$'
     let column = [0,0]
     let original_pos = virtcol('.') " using virtcol here in case of digraphs
-    normal ^
+    normal! ^
     let column[s:left] = col('.')
-    normal $
+    normal! $
     let column[s:right] = col('.')
 
     let has_comment = [['',''],['','']]
