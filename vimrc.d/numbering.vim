@@ -24,13 +24,15 @@ nnoremap <silent> <F3> :call LineNumToggle()<CR>
 
 " Switch to relative numbering on first entering visual mode, switch back
 " when the cursor moves
-function SwitchToRelative()
+function RelativeNumbering()
   if !exists("b:NERDTreeType")
     setl relativenumber
   endif
 endfunction
 
-function SwitchToAbsolute()
+" Switch back to original numbering when cursor moves in normal mode or on
+" entering insert mode
+function OrigNumbering()
   if &relativenumber
     if b:relative_numbering == 0
       setl number
@@ -39,8 +41,8 @@ function SwitchToAbsolute()
   endif
 endfunction
 
-nnoremap <silent> v :call SwitchToRelative()<CR>v
-nnoremap <silent> V :call SwitchToRelative()<CR>V
-nnoremap <silent> <C-v> :call SwitchToRelative()<CR><C-v>
-autocmd CursorMoved * silent call SwitchToAbsolute()
-autocmd InsertEnter * silent call SwitchToAbsolute()
+nnoremap <silent> v :call RelativeNumbering()<CR>v
+nnoremap <silent> V :call RelativeNumbering()<CR>V
+nnoremap <silent> <C-v> RelativeNumbering()<CR><C-v>
+autocmd CursorMoved * silent call OrigNumbering()
+autocmd InsertEnter * silent call OrigNumbering()
