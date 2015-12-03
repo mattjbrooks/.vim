@@ -43,3 +43,4 @@ nnoremap <silent> v :call SwitchToRelative()<CR>v
 nnoremap <silent> V :call SwitchToRelative()<CR>V
 nnoremap <silent> <C-v> :call SwitchToRelative()<CR><C-v>
 autocmd CursorMoved * silent call SwitchToAbsolute()
+autocmd InsertEnter * silent call SwitchToAbsolute()
