@@ -22,8 +22,7 @@ endfunction
 
 nnoremap <silent> <F3> :call LineNumToggle()<CR>
 
-" Switch to relative numbering on first entering visual mode, switch back
-" when the cursor moves
+" Switch to relative numbering on first entering visual mode
 function RelativeNumbering()
   if !exists("b:NERDTreeType")
     setl relativenumber
