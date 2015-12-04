@@ -42,6 +42,6 @@ endfunction
 
 nnoremap <silent> v :call RelativeNumbering()<CR>v
 nnoremap <silent> V :call RelativeNumbering()<CR>V
-nnoremap <silent> <C-v> RelativeNumbering()<CR><C-v>
+nnoremap <silent> <C-v> :call RelativeNumbering()<CR><C-v>
 autocmd CursorMoved * silent call OrigNumbering()
 autocmd InsertEnter * silent call OrigNumbering()
