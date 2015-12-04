@@ -31,6 +31,13 @@ function CommentList()
   return comment_list
 endfunction
 
+function CommentLen(comment)
+  let comment_len = [[0,0],[0,0]]
+  let comment_len[s:no_space] = [len(a:comment[s:no_space][s:start]), len(a:comment[s:no_space][s:end])]
+  let comment_len[s:added_space] = [len(a:comment[s:added_space][s:start]), len(a:comment[s:added_space][s:end])]
+  return comment_len
+endfunction
+
 function FindRightmost(line)
   let line_num = a:line[s:top]
   let rightmost_pos = len(getline('.'))
@@ -176,19 +183,19 @@ function HasComment(slice, comment)
 endfunction
 
 function GetSlices(current_line, column, comment_len)
-    let slice = ['', '']
+  let slice = ['', '']
 
-    let left_pos = a:column[s:left] - 1
-    let right_pos = left_pos + a:comment_len[s:start] - 1
-    let slice[s:start] = a:current_line[(left_pos):(right_pos)]
+  let left_pos = a:column[s:left] - 1
+  let right_pos = left_pos + a:comment_len[s:start] - 1
+  let slice[s:start] = a:current_line[(left_pos):(right_pos)]
 
-    if a:comment_len[s:end] > 0
-      let right_pos = a:column[s:right] - 1
-      let left_pos = right_pos - a:comment_len[s:end] + 1
-      let slice[s:end] = a:current_line[(left_pos):(right_pos)]
-    endif
+  if a:comment_len[s:end] > 0
+    let right_pos = a:column[s:right] - 1
+    let left_pos = right_pos - a:comment_len[s:end] + 1
+    let slice[s:end] = a:current_line[(left_pos):(right_pos)]
+  endif
 
-    return slice
+  return slice
 endfunction
 
 function VisualModeComment()
@@ -200,9 +207,7 @@ function VisualModeComment()
   endif
 
   " Get a list of the length of those strings
-  let comment_len = [[0,0],[0,0]]
-  let comment_len[s:no_space] = [len(comment[s:no_space][s:start]), len(comment[s:no_space][s:end])]
-  let comment_len[s:added_space] = [len(comment[s:added_space][s:start]), len(comment[s:added_space][s:end])]
+  let comment_len = CommentLen(comment)
 
   let line = [0, 0]
   " Find start and end lines
@@ -349,9 +354,7 @@ function SingleLineComment()
     return
   endif
 
-  let comment_len = [[0,0],[0,0]]
-  let comment_len[s:no_space] = [len(comment[s:no_space][s:start]), len(comment[s:no_space][s:end])]
-  let comment_len[s:added_space] = [len(comment[s:added_space][s:start]), len(comment[s:added_space][s:end])]
+  let comment_len = CommentLen(comment)
 
   let current_line = getline('.')
 
