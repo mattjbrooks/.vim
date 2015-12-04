@@ -9,7 +9,7 @@ let s:no_space = 0
 let s:added_space = 1
 
 function CommentList()
-  let comment_list = []
+  let comment_list = [['',''],['','']]
   let start_comment = ""
   let end_comment = ""
   let extension = expand('%:e')
@@ -26,7 +26,8 @@ function CommentList()
     let start_comment = '/*'
     let end_comment = '*/'
   endif
-  let comment_list = [start_comment, end_comment]
+  let comment_list[s:no_space] = [start_comment, end_comment]
+  let comment_list[s:added_space] = [start_comment . " ", " " . end_comment]
   return comment_list
 endfunction
 
@@ -192,13 +193,11 @@ endfunction
 
 function VisualModeComment()
 
-  " Find appropriate string to prepend to comment lines
-  let comment = [['',''],['','']]
-  let comment[s:no_space] = CommentList()
+  " Get a list of strings to add or remove from lines
+  let comment = CommentList()
   if comment[s:no_space][s:start] == ""
     return
   endif
-  let comment[s:added_space] = [comment[s:no_space][s:start] . " ", " " . comment[s:no_space][s:end]]
 
   " Get a list of the length of those strings
   let comment_len = [[0,0],[0,0]]
@@ -345,12 +344,10 @@ vnoremap <silent> <Space> :<C-u>call VisualModeComment()<CR>$
 
 function SingleLineComment()
 
-  let comment = [['',''],['','']]
-  let comment[s:no_space] = CommentList()
+  let comment = CommentList()
   if comment[s:no_space][s:start] == ""
     return
   endif
-  let comment[s:added_space] = [comment[s:no_space][s:start] . " ", " " . comment[s:no_space][s:end]]
 
   let comment_len = [[0,0],[0,0]]
   let comment_len[s:no_space] = [len(comment[s:no_space][s:start]), len(comment[s:no_space][s:end])]
