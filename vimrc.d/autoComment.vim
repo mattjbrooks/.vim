@@ -176,7 +176,7 @@ function IsLineCommented(slice, comment)
   return has_comment
 endfunction
 
-function SlicesForLine(current_line, column, comment_len)
+function SlicesFromLine(current_line, column, comment_len)
   let slice = ['', '']
 
   let left_pos = a:column[s:left] - 1
@@ -192,14 +192,14 @@ function SlicesForLine(current_line, column, comment_len)
   return slice
 endfunction
 
-function SlicesForSelection(line_contents, column, comment_len)
+function SlicesFromSelection(line_contents, column, comment_len)
   let slices = [[['',''],['','']],[['',''],['','']]]
   let ns = s:no_space | let s = s:added_space | let top = s:top | let bot = s:bottom
 
-  let slices[ns][top] = SlicesForLine(a:line_contents[top], a:column[top], a:comment_len[ns])
-  let slices[ns][bot] = SlicesForLine(a:line_contents[bot], a:column[bot], a:comment_len[ns])
-  let slices[s][top] = SlicesForLine(a:line_contents[top], a:column[top], a:comment_len[s])
-  let slices[s][bot] = SlicesForLine(a:line_contents[bot], a:column[bot], a:comment_len[s])
+  let slices[ns][top] = SlicesFromLine(a:line_contents[top], a:column[top], a:comment_len[ns])
+  let slices[ns][bot] = SlicesFromLine(a:line_contents[bot], a:column[bot], a:comment_len[ns])
+  let slices[s][top] = SlicesFromLine(a:line_contents[top], a:column[top], a:comment_len[s])
+  let slices[s][bot] = SlicesFromLine(a:line_contents[bot], a:column[bot], a:comment_len[s])
 
   return slices
 endfunction
@@ -300,7 +300,7 @@ function VisualModeComment()
     normal! $
     let column[s:bottom][s:right] = col('.')
 
-    let slices = SlicesForSelection(line_contents, column, comment_len)
+    let slices = SlicesFromSelection(line_contents, column, comment_len)
     let has_comment = IsSelectionCommented(slices, comment)
     let rightmost_pos = FindRightmost(line)
     let leftmost_col = FindLeftmost(line, rightmost_pos)
@@ -380,8 +380,8 @@ function SingleLineComment()
     let has_comment = [['',''],['','']]
     let slices = [['',''],['','']]
 
-    let slices[s:no_space] = SlicesForLine(current_line, column, comment_len[s:no_space])
-    let slices[s:added_space] = SlicesForLine(current_line, column, comment_len[s:added_space])
+    let slices[s:no_space] = SlicesFromLine(current_line, column, comment_len[s:no_space])
+    let slices[s:added_space] = SlicesFromLine(current_line, column, comment_len[s:added_space])
 
     let has_comment[s:no_space] = IsLineCommented(slices[s:no_space], comment[s:no_space])
     let has_comment[s:added_space] = IsLineCommented(slices[s:added_space], comment[s:added_space])
