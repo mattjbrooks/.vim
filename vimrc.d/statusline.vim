@@ -47,4 +47,4 @@ endfunction()
 autocmd CursorHold * silent call ClearOnHold()
 autocmd CursorMoved * silent call ClearOnMove()
 autocmd BufEnter,TabEnter * silent call ClearIfOnlyWindow()
-autocmd WinEnter * highlight StatusLine cterm=none ctermfg=252 ctermbg=024 | let s:doClear = 2
+autocmd WinEnter * highlight StatusLine cterm=none ctermfg=252 ctermbg=236 | let s:doClear = 2
