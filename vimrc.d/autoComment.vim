@@ -160,7 +160,7 @@ function RepositionAfterRemove(original_pos, left_col, comment_length)
   endif
 endfunction
 
-function HasComment(slice, comment)
+function IsLineCommented(slice, comment)
   let has_comment = [0,0]
 
   if a:slice[s:start] == a:comment[s:start]
@@ -193,15 +193,27 @@ function SlicesForLine(current_line, column, comment_len)
 endfunction
 
 function SlicesForSelection(line_contents, column, comment_len)
-    let slices = [[['',''],['','']],[['',''],['','']]]
-    let ns = s:no_space | let s = s:added_space | let top = s:top | let bot = s:bottom
+  let slices = [[['',''],['','']],[['',''],['','']]]
+  let ns = s:no_space | let s = s:added_space | let top = s:top | let bot = s:bottom
 
-    let slices[ns][top] = SlicesForLine(a:line_contents[top], a:column[top], a:comment_len[ns])
-    let slices[ns][bot] = SlicesForLine(a:line_contents[bot], a:column[bot], a:comment_len[ns])
-    let slices[s][top] = SlicesForLine(a:line_contents[top], a:column[top], a:comment_len[s])
-    let slices[s][bot] = SlicesForLine(a:line_contents[bot], a:column[bot], a:comment_len[s])
+  let slices[ns][top] = SlicesForLine(a:line_contents[top], a:column[top], a:comment_len[ns])
+  let slices[ns][bot] = SlicesForLine(a:line_contents[bot], a:column[bot], a:comment_len[ns])
+  let slices[s][top] = SlicesForLine(a:line_contents[top], a:column[top], a:comment_len[s])
+  let slices[s][bot] = SlicesForLine(a:line_contents[bot], a:column[bot], a:comment_len[s])
 
-    return slices
+  return slices
+endfunction
+
+function IsSelectionCommented(slices, comment)
+  let has_comment = [[['',''],['','']],[['',''],['','']]]
+  let ns = s:no_space | let s = s:added_space | let top = s:top | let bot = s:bottom
+
+  let has_comment[ns][top] = IsLineCommented(a:slices[ns][top], a:comment[ns])
+  let has_comment[ns][bot] = IsLineCommented(a:slices[ns][bot], a:comment[ns])
+  let has_comment[s][top] = IsLineCommented(a:slices[s][top], a:comment[s])
+  let has_comment[s][bot] = IsLineCommented(a:slices[s][bot], a:comment[s])
+
+  return has_comment
 endfunction
 
 function VisualModeComment()
@@ -289,16 +301,10 @@ function VisualModeComment()
     let column[s:bottom][s:right] = col('.')
 
     let slices = SlicesForSelection(line_contents, column, comment_len)
-
-    let has_comment[s:no_space][s:top] = HasComment(slices[s:no_space][s:top], comment[s:no_space])
-    let has_comment[s:no_space][s:bottom] = HasComment(slices[s:no_space][s:bottom], comment[s:no_space])
-
+    let has_comment = IsSelectionCommented(slices, comment)
     let rightmost_pos = FindRightmost(line)
     let leftmost_col = FindLeftmost(line, rightmost_pos)
     let stringofspaces = repeat(' ', leftmost_col - 1)
-
-    let has_comment[s:added_space][s:top] = HasComment(slices[s:added_space][s:top], comment[s:added_space])
-    let has_comment[s:added_space][s:bottom] = HasComment(slices[s:added_space][s:bottom], comment[s:added_space])
 
     " Add or remove comments as needed
     if has_comment[s:no_space][s:top][s:start] && has_comment[s:no_space][s:bottom][s:end]
@@ -377,8 +383,8 @@ function SingleLineComment()
     let slices[s:no_space] = SlicesForLine(current_line, column, comment_len[s:no_space])
     let slices[s:added_space] = SlicesForLine(current_line, column, comment_len[s:added_space])
 
-    let has_comment[s:no_space] = HasComment(slices[s:no_space], comment[s:no_space])
-    let has_comment[s:added_space] = HasComment(slices[s:added_space], comment[s:added_space])
+    let has_comment[s:no_space] = IsLineCommented(slices[s:no_space], comment[s:no_space])
+    let has_comment[s:added_space] = IsLineCommented(slices[s:added_space], comment[s:added_space])
 
     " Add or remove comment and reposition as needed:
     if has_comment[s:no_space][s:start] || has_comment[s:no_space][s:end]
