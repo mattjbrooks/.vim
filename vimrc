@@ -191,8 +191,5 @@ if !exists(":DiffOrig")
     \ | wincmd p | diffthis
 endif
 
-" Source additional functions
-source ~/.vim/vimrc.d/functions.vim
-
 " Use modified color scheme
 colors matts_modified_scheme
