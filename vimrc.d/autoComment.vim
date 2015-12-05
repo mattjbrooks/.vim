@@ -1,4 +1,3 @@
-" Syntactic sugar
 let s:start = 0 | let s:top = 0 | let s:left = 0 | let s:no_space = 0
 let s:end = 1 | let s:bottom = 1 | let s:right = 1 | let s:added_space = 1
 
@@ -377,8 +376,8 @@ function SingleLineComment()
     normal! $
     let column[s:right] = col('.')
 
-    let has_comment = [['',''],['','']]
     let slices = [['',''],['','']]
+    let has_comment = [['',''],['','']]
 
     let slices[s:no_space] = SlicesFromLine(current_line, column, comment_len[s:no_space])
     let slices[s:added_space] = SlicesFromLine(current_line, column, comment_len[s:added_space])
