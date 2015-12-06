@@ -138,6 +138,11 @@ set foldtext=MyFoldText()
 " Don't use Ex mode, use Q to replay the macro recorded using qq
 nnoremap Q @q
 
+" Quit if NERDTree is the only open window
+autocmd bufenter *
+  \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") |
+  \ q | endif
+
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
