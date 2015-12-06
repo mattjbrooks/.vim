@@ -139,7 +139,7 @@ set foldtext=MyFoldText()
 nnoremap Q @q
 
 " Quit if NERDTree is the only open window
-autocmd bufenter *
+autocmd BufEnter *
   \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") |
   \ q | endif
 
