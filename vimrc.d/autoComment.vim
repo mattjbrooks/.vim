@@ -274,11 +274,10 @@ function VisualModeComment()
         endwhile
       endif
     endif
-  else " if comment[s:no_space][s:end] != ''
+  else " if comment[s:end] != ''
     " (ie if the current comment type has an end string as well as a start string)
     let line_contents = ['','']
     let column = [[0,0],[0,0]]
-    let has_comment = [[['',''],['','']],[['',''],['','']]]
 
     execute "normal! " . line[s:top] . "gg"
     let line_contents[s:top] = getline('.')
@@ -301,41 +300,47 @@ function VisualModeComment()
     let stringofspaces = repeat(' ', leftmost_col - 1)
 
     " Add or remove comments as needed
-    if has_comment[s:no_space][s:top][s:start] && has_comment[s:no_space][s:bottom][s:end]
+    if has_comment[s:top][s:start] && has_comment[s:bottom][s:end]
         execute "normal! " . line[s:top] . "gg"
-        if has_comment[s:added_space][s:top][s:start]
-          call RemoveStartComment(comment_len[s:added_space][s:start])
-        else
-          call RemoveStartComment(comment_len[s:no_space][s:start])
+        if has_comment[s:top][s:start]
+          call RemoveStartComment(comment_len[s:start])
+          normal! ^
+          let current_line = getline('.')
+          if current_line[column[s:top][s:left] - 1] == " "
+            normal! hx
+          endif
         endif
         call RemoveSpacesIfEmpty()
         execute "normal! " . line[s:bottom] . "gg"
-        if has_comment[s:added_space][s:bottom][s:end]
-          call RemoveEndComment(comment_len[s:added_space][s:end])
-        else
-          call RemoveEndComment(comment_len[s:no_space][s:end])
+        if has_comment[s:bottom][s:end]
+          call RemoveEndComment(comment_len[s:end])
+          normal! $
+          let current_line = getline('.')
+          if current_line[col('.') - 1]  == " "
+            normal! x
+          endif
         endif
         call RemoveSpacesIfEmpty()
     else
-      if !has_comment[s:no_space][s:top][s:start] && line_contents[s:top] !~ '^\s*$'
+      if !has_comment[s:top][s:start] && line_contents[s:top] !~ '^\s*$'
         execute "normal! " . line[s:top] . "gg"
-        call PlaceComment(column[s:top][s:left], comment[s:added_space][s:start])
+        call PlaceComment(column[s:top][s:left], comment[s:start] . " ")
       endif
-      if !has_comment[s:no_space][s:bottom][s:end] && line_contents[s:bottom] !~ '^\s*$'
+      if !has_comment[s:bottom][s:end] && line_contents[s:bottom] !~ '^\s*$'
         execute "normal! " . line[s:bottom] . "gg"
-        call AppendComment(comment[s:added_space][s:end])
+        call AppendComment(" " . comment[s:end])
       endif
-      if !has_comment[s:no_space][s:top][s:start] && line_contents[s:top] =~ '^\s*$'
+      if !has_comment[s:top][s:start] && line_contents[s:top] =~ '^\s*$'
         execute "normal! " . line[s:top] . "gg"
         call RemoveSpacesIfEmpty()
         execute "normal! 0i" . stringofspaces
-        call AppendComment(comment[s:no_space][s:start])
+        call AppendComment(comment[s:start])
       endif
-      if !has_comment[s:no_space][s:bottom][s:end] && line_contents[s:bottom] =~ '^\s*$'
+      if !has_comment[s:bottom][s:end] && line_contents[s:bottom] =~ '^\s*$'
         execute "normal! " . line[s:bottom] . "gg"
         call RemoveSpacesIfEmpty()
         execute "normal! 0i" . stringofspaces
-        call AppendComment(comment[s:no_space][s:end])
+        call AppendComment(comment[s:end])
       endif
     endif
   endif
