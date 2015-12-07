@@ -68,29 +68,6 @@ function CheckIfUncommented(line, position, comment)
   return has_line_without_comment
 endfunction
 
-function AddCommentStart(line_num, left_pos, comment)
-  execute "normal! " . a:line_num . "gg"
-  let current_line = getline('.')
-  if current_line !~ '^\s*$'
-    if a:left_pos == 0
-      execute "normal! 0i" . a:comment
-    else
-      execute "normal!" . a:left_pos . "\|"
-      execute "normal! a" . a:comment
-    endif
-  endif
-endfunction
-
-function RemoveCommentStart(line_num, position, comment, comment_length)
-  execute "normal! " . a:line_num . "gg"
-  let current_line = getline('.')
-  let slice_of_line = current_line[(a:position[s:left]):(a:position[s:right])]
-  if slice_of_line == a:comment
-    normal! ^
-    execute "normal! " . a:comment_length . "x"
-  endif
-endfunction
-
 function RemoveSpacesIfEmpty()
   let current_line = getline('.')
   if current_line =~ '^\s*$'
@@ -243,13 +220,22 @@ function VisualModeComment()
     if has_line_without_comment
       let line_num = line[s:top]
       while line_num <= line[s:bottom]
-        call AddCommentStart(line_num, position[s:left], comment[s:start] . " ")
+        execute "normal! " . line_num . "gg"
+        let current_line = getline('.')
+        if current_line !~ '^\s*$'
+          call PlaceComment(leftmost_col, comment[s:start] . " ")
+        endif
         let line_num = line_num + 1
       endwhile
     else
       let line_num = line[s:top]
       while line_num <= line[s:bottom]
-        call RemoveCommentStart(line_num, position, comment[s:start], comment_len[s:start])
+        execute "normal! " . line_num . "gg"
+        let current_line = getline('.')
+        let slice_of_line = current_line[(position[s:left]):(position[s:right])]
+        if slice_of_line == comment[s:start]
+          call RemoveStartComment(comment_len[s:start])
+        endif
         let line_num = line_num + 1
       endwhile
       let position[s:right] = position[s:left]
