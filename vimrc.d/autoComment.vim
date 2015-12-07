@@ -1,8 +1,8 @@
-let s:start = 0 | let s:top = 0 | let s:left = 0 | let s:no_space = 0
-let s:end = 1 | let s:bottom = 1 | let s:right = 1 | let s:added_space = 1
+let s:start = 0 | let s:top = 0 | let s:left = 0
+let s:end = 1 | let s:bottom = 1 | let s:right = 1
 
 function CommentList()
-  let comment_list = [['',''],['','']]
+  let comment_list = ['','']
   let start_comment = ""
   let end_comment = ""
   let extension = expand('%:e')
@@ -19,15 +19,12 @@ function CommentList()
     let start_comment = '/*'
     let end_comment = '*/'
   endif
-  let comment_list[s:no_space] = [start_comment, end_comment]
-  let comment_list[s:added_space] = [start_comment . " ", " " . end_comment]
+  let comment_list = [start_comment, end_comment]
   return comment_list
 endfunction
 
 function CommentLen(comment)
-  let comment_len = [[0,0],[0,0]]
-  let comment_len[s:no_space] = [len(a:comment[s:no_space][s:start]), len(a:comment[s:no_space][s:end])]
-  let comment_len[s:added_space] = [len(a:comment[s:added_space][s:start]), len(a:comment[s:added_space][s:end])]
+  let comment_len = [len(a:comment[s:start]), len(a:comment[s:end])]
   return comment_len
 endfunction
 
@@ -192,25 +189,21 @@ function SlicesFromLine(current_line, column, comment_len)
 endfunction
 
 function SlicesFromSelection(line_contents, column, comment_len)
-  let slices = [[['',''],['','']],[['',''],['','']]]
-  let ns = s:no_space | let s = s:added_space | let top = s:top | let bot = s:bottom
+  let slices = [['',''],['','']]
+  let top = s:top | let bot = s:bottom
 
-  let slices[ns][top] = SlicesFromLine(a:line_contents[top], a:column[top], a:comment_len[ns])
-  let slices[ns][bot] = SlicesFromLine(a:line_contents[bot], a:column[bot], a:comment_len[ns])
-  let slices[s][top] = SlicesFromLine(a:line_contents[top], a:column[top], a:comment_len[s])
-  let slices[s][bot] = SlicesFromLine(a:line_contents[bot], a:column[bot], a:comment_len[s])
+  let slices[top] = SlicesFromLine(a:line_contents[top], a:column[top], a:comment_len)
+  let slices[bot] = SlicesFromLine(a:line_contents[bot], a:column[bot], a:comment_len)
 
   return slices
 endfunction
 
 function IsSelectionCommented(slices, comment)
-  let has_comment = [[['',''],['','']],[['',''],['','']]]
-  let ns = s:no_space | let s = s:added_space | let top = s:top | let bot = s:bottom
+  let has_comment = [['',''],['','']]
+  let top = s:top | let bot = s:bottom
 
-  let has_comment[ns][top] = IsLineCommented(a:slices[ns][top], a:comment[ns])
-  let has_comment[ns][bot] = IsLineCommented(a:slices[ns][bot], a:comment[ns])
-  let has_comment[s][top] = IsLineCommented(a:slices[s][top], a:comment[s])
-  let has_comment[s][bot] = IsLineCommented(a:slices[s][bot], a:comment[s])
+  let has_comment[top] = IsLineCommented(a:slices[top], a:comment)
+  let has_comment[bot] = IsLineCommented(a:slices[bot], a:comment)
 
   return has_comment
 endfunction
@@ -219,7 +212,7 @@ function VisualModeComment()
 
   " Get a list of strings to add or remove from lines
   let comment = CommentList()
-  if comment[s:no_space][s:start] == ""
+  if comment[s:start] == ""
     return
   endif
 
@@ -242,7 +235,7 @@ function VisualModeComment()
   let paste = &paste
   set paste
 
-  if comment[s:no_space][s:end] == ""
+  if comment[s:end] == ""
     " Find rightmost position
     let rightmost_pos = FindRightmost(line)
 
@@ -250,34 +243,36 @@ function VisualModeComment()
     let leftmost_col = FindLeftmost(line, rightmost_pos)
 
     " Find left and right pos where starting comment string would go
-    let position = [[0, 0],[0,0]]
-    let position[s:no_space][s:left] = leftmost_col - 1
-    let position[s:no_space][s:right] = position[s:no_space][s:left] + comment_len[s:no_space][s:start] - 1
-    let position[s:added_space][s:left] = leftmost_col - 1
-    let position[s:added_space][s:right] = position[s:added_space][s:left] + comment_len[s:added_space][s:start] - 1
+    let position = [0,0]
+    let position[s:left] = leftmost_col - 1
+    let position[s:right] = position[s:left] + comment_len[s:start] - 1
     
     " Check if any non-blank lines in highlighted text have no comment
-    let has_line_without_comment = [0,0]
-    let has_line_without_comment[s:no_space] = CheckIfUncommented(line, position[s:no_space], comment[s:no_space][s:start])
-    let has_line_without_comment[s:added_space] = CheckIfUncommented(line, position[s:added_space], comment[s:added_space][s:start])
+    let has_line_without_comment = CheckIfUncommented(line, position, comment[s:start])
 
     " Add or remove comments to non blank lines
-    if has_line_without_comment[s:no_space]
+    if has_line_without_comment
       let line_num = line[s:top]
       while line_num <= line[s:bottom]
-        call AddCommentStart(line_num, position[s:added_space][s:left], comment[s:added_space][s:start])
+        call AddCommentStart(line_num, position[s:left], comment[s:start] . " ")
         let line_num = line_num + 1
       endwhile
     else
       let line_num = line[s:top]
       while line_num <= line[s:bottom]
-        if has_line_without_comment[s:added_space]
-          call RemoveCommentStart(line_num, position[s:no_space], comment[s:no_space][s:start], comment_len[s:no_space][s:start])
-        else
-          call RemoveCommentStart(line_num, position[s:added_space], comment[s:added_space][s:start], comment_len[s:added_space][s:start])
-        endif
+        call RemoveCommentStart(line_num, position, comment[s:start], comment_len[s:start])
         let line_num = line_num + 1
       endwhile
+      let position[s:right] = position[s:left]
+      let g:has_line_without_whitespace = CheckIfUncommented(line, position, " ")
+      let line_num = line[s:top]
+      if g:has_line_without_whitespace == 0
+        while line_num <= line[s:bottom]
+          execute "normal! " . line_num . "gg"
+          normal! ^hx
+          let line_num = line_num + 1
+        endwhile
+      endif
     endif
   else " if comment[s:no_space][s:end] != ''
     " (ie if the current comment type has an end string as well as a start string)
