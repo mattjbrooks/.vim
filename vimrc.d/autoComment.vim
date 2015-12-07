@@ -356,7 +356,7 @@ vnoremap <silent> <Space> :<C-u>call VisualModeComment()<CR>$
 function SingleLineComment()
 
   let comment = CommentList()
-  if comment[s:no_space][s:start] == ""
+  if comment[s:start] == ""
     return
   endif
 
@@ -379,39 +379,38 @@ function SingleLineComment()
     let slices = [['',''],['','']]
     let has_comment = [['',''],['','']]
 
-    let slices[s:no_space] = SlicesFromLine(current_line, column, comment_len[s:no_space])
-    let slices[s:added_space] = SlicesFromLine(current_line, column, comment_len[s:added_space])
-
-    let has_comment[s:no_space] = IsLineCommented(slices[s:no_space], comment[s:no_space])
-    let has_comment[s:added_space] = IsLineCommented(slices[s:added_space], comment[s:added_space])
+    let slices = SlicesFromLine(current_line, column, comment_len)
+    let has_comment = IsLineCommented(slices, comment)
 
     " Add or remove comment and reposition as needed:
-    if has_comment[s:no_space][s:start] || has_comment[s:no_space][s:end]
+    if has_comment[s:start] || has_comment[s:end]
       let extra_space = 0
-      if has_comment[s:no_space][s:start]
-        if has_comment[s:added_space][s:start]
-          call RemoveStartComment(comment_len[s:added_space][s:start])
-          let extra_space = 1
-        else
-          call RemoveStartComment(comment_len[s:no_space][s:start])
+      if has_comment[s:start]
+        call RemoveStartComment(comment_len[s:start])
+        normal! ^
+        let current_line = getline('.')
+        if current_line[column[s:left] - 1] == " "
+          normal! hx
+        endif
+        let extra_space = 1
+        call RemoveSpacesIfEmpty()
+      endif
+      if has_comment[s:end]
+        call RemoveEndComment(comment_len[s:end])
+        normal! $
+        let current_line = getline('.')
+        if current_line[col('.') - 1]  == " "
+          normal! x
         endif
         call RemoveSpacesIfEmpty()
       endif
-      if has_comment[s:no_space][s:end]
-        if has_comment[s:added_space][s:end]
-          call RemoveEndComment(comment_len[s:added_space][s:end])
-        else
-          call RemoveEndComment(comment_len[s:no_space][s:end])
-        endif
-        call RemoveSpacesIfEmpty()
-      endif
-      call RepositionAfterRemove(original_pos, column[s:left], comment_len[s:no_space][s:start] + extra_space)
+      call RepositionAfterRemove(original_pos, column[s:left], comment_len[s:start] + extra_space)
     else
-      call PlaceComment(column[s:left], comment[s:added_space][s:start])
-      if comment[s:no_space][s:end] != ""
-        call AppendComment(comment[s:added_space][s:end])
+      call PlaceComment(column[s:left], comment[s:start] . " ")
+      if comment[s:end] != ""
+        call AppendComment(" " . comment[s:end])
       endif
-      call RepositionAfterAdd(original_pos, column[s:left], comment_len[s:added_space][s:start])
+      call RepositionAfterAdd(original_pos, column[s:left], comment_len[s:start] + 1)
     endif
   endif
 
