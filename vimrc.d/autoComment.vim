@@ -1,8 +1,8 @@
-let s:start = 0 | let s:top = 0 | let s:left = 0
-let s:end = 1 | let s:bottom = 1 | let s:right = 1
+let s:start = 0 | let s:end = 1
+let s:top = 0 | let s:bottom = 1
+let s:left = 0 | let s:right = 1
 
 function CommentList()
-  let comment_list = ['','']
   let start_comment = ""
   let end_comment = ""
   let extension = expand('%:e')
@@ -21,11 +21,6 @@ function CommentList()
   endif
   let comment_list = [start_comment, end_comment]
   return comment_list
-endfunction
-
-function CommentLen(comment)
-  let comment_len = [len(a:comment[s:start]), len(a:comment[s:end])]
-  return comment_len
 endfunction
 
 function FindRightmost(line)
@@ -190,21 +185,15 @@ endfunction
 
 function SlicesFromSelection(line_contents, column, comment_len)
   let slices = [['',''],['','']]
-  let top = s:top | let bot = s:bottom
-
-  let slices[top] = SlicesFromLine(a:line_contents[top], a:column[top], a:comment_len)
-  let slices[bot] = SlicesFromLine(a:line_contents[bot], a:column[bot], a:comment_len)
-
+  let slices[s:top] = SlicesFromLine(a:line_contents[s:top], a:column[s:top], a:comment_len)
+  let slices[s:bottom] = SlicesFromLine(a:line_contents[s:bottom], a:column[s:bottom], a:comment_len)
   return slices
 endfunction
 
 function IsSelectionCommented(slices, comment)
   let has_comment = [['',''],['','']]
-  let top = s:top | let bot = s:bottom
-
-  let has_comment[top] = IsLineCommented(a:slices[top], a:comment)
-  let has_comment[bot] = IsLineCommented(a:slices[bot], a:comment)
-
+  let has_comment[s:top] = IsLineCommented(a:slices[s:top], a:comment)
+  let has_comment[s:bottom] = IsLineCommented(a:slices[s:bottom], a:comment)
   return has_comment
 endfunction
 
@@ -217,7 +206,7 @@ function VisualModeComment()
   endif
 
   " Get a list of the length of those strings
-  let comment_len = CommentLen(comment)
+  let comment_len = [len(comment[s:start]), len(comment[s:end])]
 
   let line = [0, 0]
   " Find start and end lines
@@ -360,8 +349,7 @@ function SingleLineComment()
     return
   endif
 
-  let comment_len = CommentLen(comment)
-
+  let comment_len = [len(comment[s:start]), len(comment[s:end])]
   let current_line = getline('.')
 
   let paste = &paste
@@ -375,9 +363,6 @@ function SingleLineComment()
     let column[s:left] = col('.')
     normal! $
     let column[s:right] = col('.')
-
-    let slices = [['',''],['','']]
-    let has_comment = [['',''],['','']]
 
     let slices = SlicesFromLine(current_line, column, comment_len)
     let has_comment = IsLineCommented(slices, comment)
