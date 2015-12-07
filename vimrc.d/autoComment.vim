@@ -376,8 +376,8 @@ function SingleLineComment()
         let current_line = getline('.')
         if current_line[column[s:left] - 1] == " "
           normal! hx
+          let extra_space = 1
         endif
-        let extra_space = 1
         call RemoveSpacesIfEmpty()
       endif
       if has_comment[s:end]
