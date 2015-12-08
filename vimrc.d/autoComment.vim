@@ -23,33 +23,23 @@ function CommentList()
   return comment_list
 endfunction
 
-function FindRightmost(line)
+function FindLeftmost(line)
   let line_num = a:line[s:top]
-  let rightmost_pos = len(getline('.'))
   while line_num <= a:line[s:bottom]
     execute "normal! " . line_num . "gg"
-    let length_of_line = len(getline('.'))
-    if length_of_line > rightmost_pos
-      let rightmost_pos = length_of_line
-    endif
-    let line_num = line_num + 1
-  endwhile
-  return rightmost_pos
-endfunction
-
-function FindLeftmost(line, rightmost_pos)
-  let line_num = a:line[s:top]
-  let leftmost_col = a:rightmost_pos
-  while line_num <= a:line[s:bottom]
-    execute "normal! " . line_num . "gg"
-    normal! ^
-    let col_start = col('.')
     let current_line = getline('.')
-    if col_start < leftmost_col && current_line !~ '^\s*$'
-      let leftmost_col = col_start
+    if current_line !~ '^\s*$'
+      normal! ^
+      let line_start = col('.')
+      if !exists('leftmost_col') || line_start < leftmost_col
+        let leftmost_col = line_start
+      endif
     endif
     let line_num = line_num + 1
   endwhile
+  if !exists('leftmost_col')
+    let leftmost_col = 0
+  endif
   return leftmost_col
 endfunction
 
@@ -202,11 +192,8 @@ function VisualModeComment()
   set paste
 
   if comment[s:end] == ""
-    " Find rightmost position
-    let rightmost_pos = FindRightmost(line)
-
     " Find leftmost column
-    let leftmost_col = FindLeftmost(line, rightmost_pos)
+    let leftmost_col = FindLeftmost(line)
 
     " Find left and right pos where starting comment string would go
     let position = [0,0]
@@ -270,8 +257,7 @@ function VisualModeComment()
 
     let slices = SlicesFromSelection(line_contents, column, comment_len)
     let has_comment = IsSelectionCommented(slices, comment)
-    let rightmost_pos = FindRightmost(line)
-    let leftmost_col = FindLeftmost(line, rightmost_pos)
+    let leftmost_col = FindLeftmost(line)
     let stringofspaces = repeat(' ', leftmost_col - 1)
 
     " Add or remove comments as needed
