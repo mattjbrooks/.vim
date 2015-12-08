@@ -118,22 +118,6 @@ function RepositionAfterRemove(original_pos, left_col, comment_length)
   endif
 endfunction
 
-function IsLineCommented(slice, comment)
-  let has_comment = [0,0]
-
-  if a:slice[s:start] == a:comment[s:start]
-    let has_comment[s:start] = 1
-  endif
-
-  if a:comment[s:end] != ""
-    if a:slice[s:end] == a:comment[s:end]
-      let has_comment[s:end] = 1
-    endif
-  endif
-
-  return has_comment
-endfunction
-
 function SlicesFromLine(current_line, column, comment_len)
   let slice = ['', '']
 
@@ -148,6 +132,22 @@ function SlicesFromLine(current_line, column, comment_len)
   endif
 
   return slice
+endfunction
+
+function IsLineCommented(slice, comment)
+  let has_comment = [0,0]
+
+  if a:slice[s:start] == a:comment[s:start]
+    let has_comment[s:start] = 1
+  endif
+
+  if a:comment[s:end] != ""
+    if a:slice[s:end] == a:comment[s:end]
+      let has_comment[s:end] = 1
+    endif
+  endif
+
+  return has_comment
 endfunction
 
 function SlicesFromSelection(line_contents, column, comment_len)
