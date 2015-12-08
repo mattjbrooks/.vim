@@ -239,9 +239,9 @@ function VisualModeComment()
         let line_num = line_num + 1
       endwhile
       let position[s:right] = position[s:left]
-      let g:has_line_without_whitespace = CheckIfUncommented(line, position, " ")
+      let has_line_without_whitespace = CheckIfUncommented(line, position, " ")
       let line_num = line[s:top]
-      if g:has_line_without_whitespace == 0
+      if has_line_without_whitespace == 0
         while line_num <= line[s:bottom]
           execute "normal! " . line_num . "gg"
           normal! ^hx
