@@ -54,6 +54,3 @@ highlight Pmenusel ctermbg=grey
 " HTML
 highlight htmlTitle ctermfg=red
 highlight htmlString ctermfg=033
-
-" Javascript
-highlight javaScript ctermfg=253
