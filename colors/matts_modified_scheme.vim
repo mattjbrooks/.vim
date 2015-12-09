@@ -18,7 +18,7 @@ endif
 
 let colors_name = "matts_modified_scheme"
 
-highlight Normal ctermbg=234
+highlight Normal ctermbg=234 ctermfg=254
 highlight Comment ctermfg=036
 highlight Statement ctermfg=227
 highlight Identifier ctermfg=038
