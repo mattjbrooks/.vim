@@ -43,19 +43,19 @@ function FindLeftmost(line)
   return leftmost_col
 endfunction
 
-function CheckIfUncommented(line, position, comment)
+function CheckForString(line, position, string)
   let line_num = a:line[s:top]
-  let has_line_without_comment = 0
+  let slices_match_string = 1
   while line_num <= a:line[s:bottom]
     execute "normal! " . line_num . "gg"
     let current_line = getline('.')
     let slice_of_line = current_line[(a:position[s:left]):(a:position[s:right])]
-    if slice_of_line != a:comment && current_line !~ '^\s*$'
-      let has_line_without_comment = 1
+    if slice_of_line != a:string && current_line !~ '^\s*$'
+      let slices_match_string = 0
     endif
     let line_num = line_num + 1
   endwhile
-  return has_line_without_comment
+  return slices_match_string
 endfunction
 
 function RemoveSpacesIfBlank()
@@ -201,10 +201,10 @@ function VisualModeComment()
     let position[s:right] = position[s:left] + comment_len[s:start] - 1
     
     " Check if any non-blank lines in highlighted text have no comment
-    let has_line_without_comment = CheckIfUncommented(line, position, comment[s:start])
+    let all_commented = CheckForString(line, position, comment[s:start])
 
     " Add or remove comments to non blank lines
-    if has_line_without_comment
+    if all_commented == 0
       let line_num = line[s:top]
       while line_num <= line[s:bottom]
         execute "normal! " . line_num . "gg"
@@ -226,9 +226,9 @@ function VisualModeComment()
         let line_num = line_num + 1
       endwhile
       let position[s:right] = position[s:left]
-      let has_line_without_whitespace = CheckIfUncommented(line, position, " ")
+      let all_have_space = CheckForString(line, position, " ")
       let line_num = line[s:top]
-      if has_line_without_whitespace == 0
+      if all_have_space
         while line_num <= line[s:bottom]
           execute "normal! " . line_num . "gg"
           normal! ^hx
