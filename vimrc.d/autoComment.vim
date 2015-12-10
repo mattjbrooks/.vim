@@ -58,7 +58,7 @@ function CheckIfUncommented(line, position, comment)
   return has_line_without_comment
 endfunction
 
-function RemoveSpacesIfEmpty()
+function RemoveSpacesIfBlank()
   let current_line = getline('.')
   if current_line =~ '^\s*$'
     normal! 0d$
@@ -271,7 +271,7 @@ function VisualModeComment()
             normal! hx
           endif
         endif
-        call RemoveSpacesIfEmpty()
+        call RemoveSpacesIfBlank()
         execute "normal! " . line[s:bottom] . "gg"
         if has_comment[s:bottom][s:end]
           call RemoveEndComment(comment_len[s:end])
@@ -281,7 +281,7 @@ function VisualModeComment()
             normal! x
           endif
         endif
-        call RemoveSpacesIfEmpty()
+        call RemoveSpacesIfBlank()
     else
       if !has_comment[s:top][s:start] && line_contents[s:top] !~ '^\s*$'
         execute "normal! " . line[s:top] . "gg"
@@ -293,13 +293,13 @@ function VisualModeComment()
       endif
       if !has_comment[s:top][s:start] && line_contents[s:top] =~ '^\s*$'
         execute "normal! " . line[s:top] . "gg"
-        call RemoveSpacesIfEmpty()
+        call RemoveSpacesIfBlank()
         execute "normal! 0i" . stringofspaces
         call AppendComment(comment[s:start])
       endif
       if !has_comment[s:bottom][s:end] && line_contents[s:bottom] =~ '^\s*$'
         execute "normal! " . line[s:bottom] . "gg"
-        call RemoveSpacesIfEmpty()
+        call RemoveSpacesIfBlank()
         execute "normal! 0i" . stringofspaces
         call AppendComment(comment[s:end])
       endif
@@ -350,7 +350,7 @@ function SingleLineComment()
           normal! hx
           let extra_space = 1
         endif
-        call RemoveSpacesIfEmpty()
+        call RemoveSpacesIfBlank()
       endif
       if has_comment[s:end]
         call RemoveEndComment(comment_len[s:end])
@@ -359,7 +359,7 @@ function SingleLineComment()
         if current_line[col('.') - 1]  == " "
           normal! x
         endif
-        call RemoveSpacesIfEmpty()
+        call RemoveSpacesIfBlank()
       endif
       call RepositionAfterRemove(original_pos, column[s:left], comment_len[s:start] + extra_space)
     else
