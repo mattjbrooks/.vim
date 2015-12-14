@@ -14,8 +14,8 @@ if &term =~ '^screen'
   map [1;5A <C-Up>
   map [1;5C <C-Right>
   " Map Alt + arrow keys
-  map [1;3D <M-left>
-  map [1;3B <M-down>
-  map [1;3A <M-up>
-  map [1;3C <M-right>
+  map [1;3D <M-Left>
+  map [1;3B <M-Down>
+  map [1;3A <M-Up>
+  map [1;3C <M-Right>
 endif
