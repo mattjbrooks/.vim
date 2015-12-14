@@ -3,12 +3,19 @@
 " produce control code.  Needs 'set-window-option -g xterm-keys on' in
 " .tmux.conf
 if &term =~ '^screen'
-  map OD <Left>
-  map OB <Down>
-  map OA <Up>
-  map OC <Right>
+  " Diable arrow keys (in hjkl order)
+  map OD <NOP>
+  map OB <NOP>
+  map OA <NOP>
+  map OC <NOP>
+  " Map Ctrl + arrow keys
   map [1;5D <C-Left>
   map [1;5B <C-Down>
   map [1;5A <C-Up>
   map [1;5C <C-Right>
+  " Map Alt + arrow keys
+  map [1;3D <M-left>
+  map [1;3B <M-down>
+  map [1;3A <M-up>
+  map [1;3C <M-right>
 endif
