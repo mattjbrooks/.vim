@@ -3,7 +3,7 @@
 " produce control code.  Needs 'set-window-option -g xterm-keys on' in
 " .tmux.conf
 if &term =~ '^screen'
-  " Diable arrow keys (in hjkl order)
+  " Disable arrow keys (in hjkl order)
   map OD <NOP>
   map OB <NOP>
   map OA <NOP>
