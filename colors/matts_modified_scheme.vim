@@ -54,3 +54,11 @@ highlight Pmenusel ctermbg=grey
 " HTML
 highlight htmlTitle ctermfg=red
 highlight htmlString ctermfg=033
+
+" NERDTree
+highlight NERDTreeDir ctermfg=038
+highlight NERDTreeUp ctermfg=038
+highlight NERDTreeCWD ctermfg=yellow
+highlight NERDTreeHelp ctermfg=red
+highlight NERDTreeHelpTitle ctermfg=036
+highlight NERDTreeFlag ctermfg=red
