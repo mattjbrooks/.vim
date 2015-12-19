@@ -9,7 +9,7 @@ set statusline=%{&ff!='unix'?'[WARNING:\ '.&ff.'\ fileformat]\ ':''}%<%f\ %h%{&m
 set laststatus=2
 
 " change statusline colours in insert mode
-autocmd InsertEnter * highlight StatusLine cterm=none ctermfg=254 ctermbg=238
+autocmd InsertEnter * highlight StatusLine cterm=none ctermfg=254 ctermbg=236
 autocmd InsertLeave * highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
 
 " change statusline background if entering a window

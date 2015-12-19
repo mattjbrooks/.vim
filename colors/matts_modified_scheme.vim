@@ -18,7 +18,7 @@ endif
 
 let colors_name = "matts_modified_scheme"
 
-highlight Normal ctermbg=234 ctermfg=254
+" highlight Normal ctermbg=234 ctermfg=254
 highlight Comment ctermfg=036
 highlight Statement ctermfg=227
 highlight Identifier ctermfg=038
@@ -39,6 +39,7 @@ highlight Cursorline cterm=none ctermbg=none
 highlight CursorLineNr ctermbg=237
 highlight LineNr ctermfg=grey
 highlight CursorLineNr ctermfg=grey
+highlight MoreMsg ctermfg=white
 highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
 highlight StatusLineNC cterm=none ctermfg=DarkGrey ctermbg=none
 highlight ColorColumn ctermbg=235
