@@ -1,4 +1,5 @@
 set nocompatible                " Use Vim settings, rather than Vi (keep at start, because it changes other options)
+set encoding=utf-8              " specify utf8 encoding
 set backspace=indent,eol,start  " allow backspacing over everything in insert mode
 set backup                      " keep a backup file
 set backupdir=~/.vimbak         " save backup files in their own directory (remember to create it)
@@ -15,7 +16,7 @@ set timeoutlen=600              " reduce time waited for mapped key sequences
 set complete=.                  " by default autocomplete only based on the current buffer
 set shortmess+=I                " disable intro screen
 set lazyredraw                  " don't redraw for untyped actions
-set encoding=utf-8              " specify utf8 encoding
+set sessionoptions-=folds       " don't store folds in sessions
 
 " disable cursor keys in normal mode
 nnoremap <Up> <NOP>
@@ -109,8 +110,8 @@ command SS mksession! ~/.vimsession | echo "Saved current session"
 " L command to load session stored at ~/.vimsession
 command L source ~/.vimsession | syn sync fromstart
 
-" \\ to join lines (due to next mapping)
-nnoremap \\ J
+" <leader>\ to join lines (due to next mapping)
+nnoremap <leader>\ J
 
 " J and K to move to prev/next buffer
 nnoremap <silent> J :bprev<CR>
