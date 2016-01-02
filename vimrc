@@ -108,7 +108,7 @@ nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 command SS mksession! ~/.vimsession | echo "Saved current session"
 
 " L command to load session stored at ~/.vimsession
-command L source ~/.vimsession | syn sync fromstart
+command L source ~/.vimsession | syn sync fromstart | let @/ = ""
 
 " <leader>\ to join lines (due to next mapping)
 nnoremap <leader>\ J
