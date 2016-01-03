@@ -124,8 +124,6 @@ function InsertATab()
   endif
 endfunction
 
-" au insertLeave * let b:navigating_snippet = 0 " Turn off snippet navigation when leaving insert mode
-
 function SnippetNav()
   call FindNextEntry()
   let b:multiline_snippet_entry = 0
