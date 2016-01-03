@@ -124,7 +124,7 @@ function InsertATab()
   endif
 endfunction
 
-au insertLeave * let b:navigating_snippet = 0 " Turn off snippet navigation when leaving insert mode
+" au insertLeave * let b:navigating_snippet = 0 " Turn off snippet navigation when leaving insert mode
 
 function SnippetNav()
   call FindNextEntry()
@@ -182,8 +182,29 @@ function SnippetLoad()
   endif
 endfunction
 
+function CheckForEntries()
+  if b:navigating_snippet == 1
+    let line_num = line('.')
+    while line_num <= line('$')
+      if match(getline(line_num), '«\w*»') != -1
+        return
+      endif
+      let line_num = line_num + 1
+    endwhile
+    let line_num = line('.') - 1
+    while line_num > 0
+      if match(getline(line_num), '«\w*»') != -1
+        return
+      endif
+      let line_num = line_num - 1
+    endwhile
+    let b:navigating_snippet = 0
+  endif
+endfunction
+    
 " Snippet insertion in normal mode:
 function NormalModeTabMod()
+  call CheckForEntries()
   if b:navigating_snippet
     call SnippetNav()
   else
