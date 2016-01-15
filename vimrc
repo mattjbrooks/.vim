@@ -17,6 +17,7 @@ set complete=.                  " by default autocomplete only based on the curr
 set shortmess+=I                " disable intro screen
 set lazyredraw                  " don't redraw for untyped actions
 set sessionoptions-=folds       " don't store folds in sessions
+set noeb vb t_vb=               " disable bell and visualbell
 
 " disable cursor keys in normal mode
 nnoremap <Up> <NOP>
