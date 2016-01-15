@@ -1,8 +1,8 @@
-" Workaround to improve php indentation inside html
+" Workaround to improve indentation of javascript and php inside html
 
 autocmd BufNewFile,BufRead *.html,*.xhtml setl syn=php | setl cinwords+=case,default
 
-function CheckForPHP()
+function CheckSyntax()
   if &ft == 'html' || &ft == 'xhtml'
     if !exists("*synstack")
       return
@@ -10,8 +10,7 @@ function CheckForPHP()
       let syntaxlist = map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
     endif
     if len(syntaxlist) > 0
-      if syntaxlist[0] =~ "php"
-        " We're in a php block
+      if syntaxlist[0] =~ "php" || syntaxlist[0] =~ "javaScript"
         setlocal noautoindent nocindent smartindent indentexpr=
       endif
     else
@@ -20,8 +19,8 @@ function CheckForPHP()
   endif
 endfunction
 
-au insertEnter * :call CheckForPHP()
-let g:funcsToExecOnCR = g:funcsToExecOnCR + ['CheckForPHP()']
+au insertEnter * :call CheckSyntax()
+let g:funcsToExecOnCR = g:funcsToExecOnCR + ['CheckSyntax()']
 
 " F6 in normal mode to toggle the above for *.php files by switching ft
 

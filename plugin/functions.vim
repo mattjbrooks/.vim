@@ -12,7 +12,7 @@ source ~/.vim/vimrc.d/toggleHyphen.vim
 source ~/.vim/vimrc.d/numbering.vim
 source ~/.vim/vimrc.d/openInFirefox.vim
 source ~/.vim/vimrc.d/execOnReturn.vim
-source ~/.vim/vimrc.d/phpIndentation.vim
+source ~/.vim/vimrc.d/indentation.vim
 source ~/.vim/vimrc.d/completion.vim
 source ~/.vim/vimrc.d/autoComment.vim
 source ~/.vim/vimrc.d/tmux.vim
