@@ -9,11 +9,13 @@ function CheckSyntax()
     else
       let syntaxlist = map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
     endif
-    if len(syntaxlist) > 0
-      if syntaxlist[0] =~ "php" || syntaxlist[0] =~ "javaScript"
-        setlocal noautoindent nocindent smartindent indentexpr=
-        return
-      endif
+    if len(syntaxlist) > 0 && getline('.') !~ "<script"
+      for syntaxitem in syntaxlist
+        if syntaxitem =~ "php" || syntaxitem =~ "javaScript"
+          setlocal noautoindent nocindent smartindent indentexpr=
+          return
+        endif
+      endfor
     endif
     setlocal noautoindent nocindent nosmartindent indentexpr=HtmlIndentGet(v:lnum)
   endif
