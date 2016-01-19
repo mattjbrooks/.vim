@@ -213,10 +213,14 @@ endfunction
 " Tab completion in insert mode (adapted from Tab_Or_Complete from the vim wiki)
 function InsertModeTabMod()
   if &ft == 'html' || &ft == 'xhtml' || &ft == 'php'
-    " get the character to the left of the cursor
-    let previous_char = getline('.')[col('.')-2]
-    if previous_char == "\/"
-      return "\<C-x>\<C-o>\<Esc>==A"
+    " get the two characters to the left of the cursor
+    let previous_chars = getline('.')[col('.')-3 : col('.')-2]
+    if previous_chars == "<\/"
+      if &indentexpr == "HtmlIndentGet(v:lnum)"
+        return "\<C-x>\<C-o>\<Esc>==A"
+      else
+        return "script>\<Esc>a\<Esc>==A"
+      endif
     endif
   endif
   if b:navigating_snippet == 1 " if we are navigating rather than loading snippets
@@ -253,4 +257,4 @@ nnoremap <leader><Tab> :call SnippetToggle()<CR>
 
 " Modify tab behaviour in normal and insert mode
 nnoremap <silent> <Tab> :call NormalModeTabMod()<CR>
-inoremap <Tab> <C-R>=InsertModeTabMod()<CR>
+inoremap <silent> <Tab> <C-R>=InsertModeTabMod()<CR>
