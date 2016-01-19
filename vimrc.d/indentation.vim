@@ -12,6 +12,8 @@ function CheckSyntax()
     if len(syntaxlist) > 0
       if syntaxlist[0] =~ "php" || syntaxlist[0] =~ "javaScript"
         setlocal noautoindent nocindent smartindent indentexpr=
+      else
+        setlocal noautoindent nocindent nosmartindent indentexpr=HtmlIndentGet(v:lnum)
       endif
     else
       setlocal noautoindent nocindent nosmartindent indentexpr=HtmlIndentGet(v:lnum)
