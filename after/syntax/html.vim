@@ -14,6 +14,3 @@ syn keyword htmlTagName contained section source summary time video
 syn keyword htmlArg contained autofocus placeholder min max step
 syn keyword htmlArg contained contenteditable contextmenu draggable hidden item
 syn keyword htmlArg contained itemprop list subject spellcheck
-
-syn include @htmlCss syntax/css/media-queries.vim
-syn include @htmlCss syntax/css/table-border.vim
