@@ -29,6 +29,10 @@ function RelativeNumbering()
   endif
 endfunction
 
+nnoremap <silent> v :call RelativeNumbering()<CR>v
+nnoremap <silent> V :call RelativeNumbering()<CR>V
+nnoremap <silent> <C-v> :call RelativeNumbering()<CR><C-v>
+
 " Switch back to original numbering when cursor moves in normal mode or on
 " entering insert mode
 function OrigNumbering()
@@ -40,8 +44,5 @@ function OrigNumbering()
   endif
 endfunction
 
-nnoremap <silent> v :call RelativeNumbering()<CR>v
-nnoremap <silent> V :call RelativeNumbering()<CR>V
-nnoremap <silent> <C-v> :call RelativeNumbering()<CR><C-v>
 autocmd CursorMoved * silent call OrigNumbering()
 autocmd InsertEnter * silent call OrigNumbering()
