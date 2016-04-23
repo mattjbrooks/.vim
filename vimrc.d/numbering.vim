@@ -1,4 +1,3 @@
-" <F3> to toggle between standard and relative line numbering
 function SetupVar()
   if !exists("b:relative_numbering")
     let b:relative_numbering = 0
@@ -7,6 +6,7 @@ endfunction
 
 autocmd BufNewFile,BufRead,BufEnter * call SetupVar()
 
+" <F3> to toggle between standard and relative line numbering
 function LineNumToggle()
   if !exists("b:NERDTreeType") " Check we are not in NERDTree
     if b:relative_numbering
