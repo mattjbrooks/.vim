@@ -124,6 +124,10 @@ vnoremap <silent> K :<C-u>bnext<CR>
 nnoremap <C-j> 2<C-e>
 nnoremap <C-k> 2<C-y>
 
+" reselect after indent/outdent in visual mode
+vnoremap < <gv
+vnoremap > >gv
+
 " Folding preferences:
 set foldmethod=indent
 set foldignore=
