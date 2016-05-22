@@ -149,6 +149,9 @@ autocmd BufEnter *
   \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") |
   \ q | endif
 
+" W! to write as root with sudo
+cmap W! w !sudo tee % > /dev/null && sudo -k
+
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
