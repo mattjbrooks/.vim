@@ -13,14 +13,33 @@ function CommentList()
   elseif &ft == 'javascript' || extension == 'php'
     let start_comment = "//"
   elseif &ft == 'html' || &ft == 'xhtml'
-    let start_comment = '<!--'
-    let end_comment = '-->'
+    if IsScript()
+      let start_comment = '//'
+    else
+      let start_comment = '<!--'
+      let end_comment = '-->'
+    endif
   elseif &ft == 'css'
     let start_comment = '/*'
     let end_comment = '*/'
   endif
   let comment_list = [start_comment, end_comment]
   return comment_list
+endfunction
+
+function IsScript()
+  if !exists("*synstack")
+    return 0
+  else
+    let syntaxlist = map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+  endif
+  if len(syntaxlist) > 0 && getline('.') !~ "<script" && getline('.') !~ "<?php"
+    for syntaxitem in syntaxlist
+      if syntaxitem =~ "php" || syntaxitem =~ "javaScript"
+        return 1
+      endif
+    endfor
+  endif
 endfunction
 
 function FindLeftmost(line)
