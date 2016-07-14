@@ -46,16 +46,16 @@ endfunction
 function FixIndentation(linesinsnippet)
   if &ft != "python"
     execute 'normal! '.a:linesinsnippet.'=='
-  endif
-  " Get the current cursor column
-  let posbefore = col(".")
-  " delete previous word and join lines
-  normal! bdwJ
-  " Start of python specific bit:
-  if &ft == "python"
+    " delete previous word and join lines
+    normal! bdwJ
+  else
+    " Start of python specific bit:
+    " Get the current cursor column
+    let posbefore = col(".")
+    normal! bdwJ
     " Get the position of first nonspace character on line
     let startofline = match(getline('.'),'\S')+1
-    if startofline > posbefore && a:linesinsnippet > 1 " only add spaces if this is true
+    if startofline > posbefore && a:linesinsnippet > 1
       let spacesneeded = startofline - posbefore
       " We want to add the offset to the start of every line below the current one until the end of the snippet
       let linebelow = line('.') + 1
@@ -65,8 +65,8 @@ function FixIndentation(linesinsnippet)
       " cursor to the correct positon
       execute 'silent '. linebelow . ',' . endofsnippet . 's/^/' . stringofspaces . '/ |normal! ``'
     endif
+    " End of python specific bit
   endif
-  " End of python specific bit
 endfunction
 
 function CarriageReturnInEntry()
