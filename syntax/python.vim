@@ -81,6 +81,12 @@
 "                                           NOTE: This option don't override
 "                                           any previously set options
 "
+" *** Set some options here rather than my .vimrc - Matt ***
+" ----------------------------------------------------------
+let python_highlight_all = 1
+let python_highlight_indent_errors = 0
+let python_highlight_space_errors = 0
+"
 "    python_slow_sync                       Can be set to 0 for slow machines
 "
 
