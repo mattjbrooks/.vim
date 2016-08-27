@@ -1,5 +1,5 @@
 " On carriage return execute the functions named in g:funcsToExecOnCR
-" (used in completion.vim and phpIndentation.vim to respond to
+" (used in completion.vim and indentation.vim to respond to
 " carriage return by adding functions to the g:funcsToExecOnCR list)
 
 let g:funcsToExecOnCR = []
