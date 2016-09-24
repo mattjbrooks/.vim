@@ -14,8 +14,8 @@ inoremap <F4> <C-R>=HyphenToggle()<CR>
 " Used to indicate if hyphen is in list of word characters in statusline
 function ReturnHyphen()
   if &iskeyword =~ ',-'
-    return "[-] "
+    return '- '
   else
-    return ""
+    return ''
   endif
 endfunction

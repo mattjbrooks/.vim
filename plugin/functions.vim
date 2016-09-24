@@ -8,9 +8,9 @@ source ~/.vim/vimrc.d/continuation.vim
 source ~/.vim/vimrc.d/fakeCapsLock.vim
 source ~/.vim/vimrc.d/toggleClipboard.vim
 source ~/.vim/vimrc.d/toggleNERDTree.vim
+source ~/.vim/vimrc.d/toggleDot.vim
 source ~/.vim/vimrc.d/toggleHyphen.vim
 source ~/.vim/vimrc.d/numbering.vim
-source ~/.vim/vimrc.d/openInFirefox.vim
 source ~/.vim/vimrc.d/execOnReturn.vim
 source ~/.vim/vimrc.d/indentation.vim
 source ~/.vim/vimrc.d/completion.vim
