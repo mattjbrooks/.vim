@@ -3,7 +3,7 @@
 
 " Show warning if fileformat is not unix, make modified flag more obvious,
 " show caps lock and whether hyphen in word characters (uses ReturnCaps() from fakeCapsLock.vim and ReturnHyphen() from toggleHyphen.vim)
-set statusline=%{&ff!='unix'?'[WARNING:\ '.&ff.'\ fileformat]\ ':''}%<%f\ %h%{&mod?'[modified]\ ':''}%{ReturnCaps()}%{ReturnHyphen()}%r%=%-14.(%l,%c%V%)\ %P
+set statusline=%{&ff!='unix'?'[WARNING:\ '.&ff.'\ fileformat]\ ':''}%<%f\ %h%{&mod?'[modified]\ ':''}%{ReturnCaps()}%{ReturnDot()}%{ReturnHyphen()}%r%=%-14.(%l,%c%V%)\ %P
 
 " statusline visible
 set laststatus=2
