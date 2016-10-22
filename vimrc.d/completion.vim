@@ -210,17 +210,26 @@ function NormalModeTabMod()
   endif
 endfunction
 
-" Tab completion in insert mode (adapted from Tab_Or_Complete from the vim wiki)
+" Tab completion in insert mode:
 function InsertModeTabMod()
-  if &ft == 'html' || &ft == 'xhtml' || &ft == 'php'
+  if &ft =~ 'html' || &ft == 'php'
     " get the two characters to the left of the cursor
     let previous_chars = getline('.')[col('.')-3 : col('.')-2]
     if previous_chars == "<\/"
-      if &indentexpr == "HtmlIndentGet(v:lnum)"
-        return "\<C-x>\<C-o>\<Esc>==A"
+      let syntaxlist = map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+      if &ft == "htmldjango"
+        let positioning = "A"
       else
-        return "script>\<Esc>a\<Esc>==A"
+        let positioning = "==A"
       endif
+      if len(syntaxlist) > 0
+        for syntaxitem in syntaxlist
+          if syntaxitem == "htmlEndTag"
+            return "\<C-x>\<C-o>\<Esc>" . positioning
+          endif
+        endfor
+      endif
+      return "script>\<Esc>a\<Esc>==A"
     endif
   endif
   if b:navigating_snippet == 1 " if we are navigating rather than loading snippets

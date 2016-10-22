@@ -18,6 +18,8 @@ function CheckSyntax()
       endfor
     endif
     setlocal noautoindent nocindent nosmartindent indentexpr=HtmlIndentGet(v:lnum)
+  elseif &ft == 'htmldjango'
+    setlocal noautoindent nocindent smartindent indentexpr=
   endif
 endfunction
 
