@@ -216,20 +216,21 @@ function InsertModeTabMod()
     " get the two characters to the left of the cursor
     let previous_chars = getline('.')[col('.')-3 : col('.')-2]
     if previous_chars == "<\/"
-      let syntaxlist = map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
       if &ft == "htmldjango"
         let positioning = "A"
       else
         let positioning = "==A"
       endif
+      let syntaxlist = map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
       if len(syntaxlist) > 0
         for syntaxitem in syntaxlist
           if syntaxitem == "htmlEndTag"
             return "\<C-x>\<C-o>\<Esc>" . positioning
+          elseif syntaxitem == "javaScript"
+            return "script>\<Esc>a\<Esc>" . positioning
           endif
         endfor
       endif
-      return "script>\<Esc>a\<Esc>" . positioning
     endif
   endif
   if b:navigating_snippet == 1 " if we are navigating rather than loading snippets
