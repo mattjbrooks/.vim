@@ -1,6 +1,8 @@
 " Workaround to improve indentation of javascript and php inside html
 
-autocmd BufNewFile,BufRead *.html,*.xhtml setl syn=php | setl cinwords+=case,default
+autocmd BufNewFile,BufRead *.html,*.xhtml setl cinwords+=case,default
+autocmd FileType html,xhtml setl syn=php
+autocmd FileType htmldjango setl noautoindent nocindent smartindent indentexpr=
 
 function CheckSyntax()
   if &ft == 'html' || &ft == 'xhtml'
@@ -9,21 +11,27 @@ function CheckSyntax()
     else
       let syntaxlist = map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
     endif
-    if len(syntaxlist) > 0 && getline('.') !~ "<script"
+    let line_contents = getline('.')
+    if len(syntaxlist) > 0 && line_contents !~ "<script"
       for syntaxitem in syntaxlist
         if syntaxitem =~ "php" || syntaxitem =~ "javaScript"
           setlocal noautoindent nocindent smartindent indentexpr=
           return
         endif
       endfor
+    elseif len(syntaxlist) == 0
+      if line_contents =~ "{% extends" || line_contents =~ "{% block" || line_contents =~ "{% load" || line_contents =~ "{#"
+        setlocal ft=htmldjango
+        setlocal syn=htmldjango
+        setlocal noautoindent nocindent smartindent indentexpr=
+        return
+      endif
     endif
     setlocal noautoindent nocindent nosmartindent indentexpr=HtmlIndentGet(v:lnum)
-  elseif &ft == 'htmldjango'
-    setlocal noautoindent nocindent smartindent indentexpr=
   endif
 endfunction
 
-au insertEnter * :call CheckSyntax()
+autocmd insertEnter * :call CheckSyntax()
 let g:funcsToExecOnCR = g:funcsToExecOnCR + ['CheckSyntax()']
 
 " F6 in normal mode to toggle the above for *.php files by switching ft
