@@ -229,7 +229,7 @@ function InsertModeTabMod()
           endif
         endfor
       endif
-      return "script>\<Esc>a\<Esc>==A"
+      return "script>\<Esc>a\<Esc>" . positioning
     endif
   endif
   if b:navigating_snippet == 1 " if we are navigating rather than loading snippets
