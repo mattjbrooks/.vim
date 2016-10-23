@@ -23,7 +23,6 @@ function CheckSyntax()
       if line_contents =~ "{% extends" || line_contents =~ "{% block" || line_contents =~ "{% load" || line_contents =~ "{#"
         setlocal ft=htmldjango
         setlocal syn=htmldjango
-        setlocal noautoindent nocindent smartindent indentexpr=
         return
       endif
     endif
