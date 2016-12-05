@@ -1,18 +1,31 @@
-" List of functions to source from vimrc.d
-" A collection of random bits and pieces written whilst learning
-" Probably better to use proper plugins instead
+" Functions to source from vimrc.d
+" ================================
 
-source ~/.vim/vimrc.d/statusline.vim
-source ~/.vim/vimrc.d/python.vim
-source ~/.vim/vimrc.d/continuation.vim
-source ~/.vim/vimrc.d/fakeCapsLock.vim
-source ~/.vim/vimrc.d/toggleClipboard.vim
-source ~/.vim/vimrc.d/toggleNERDTree.vim
-source ~/.vim/vimrc.d/toggleDot.vim
-source ~/.vim/vimrc.d/toggleHyphen.vim
-source ~/.vim/vimrc.d/numbering.vim
-source ~/.vim/vimrc.d/execOnReturn.vim
-source ~/.vim/vimrc.d/indentation.vim
-source ~/.vim/vimrc.d/completion.vim
-source ~/.vim/vimrc.d/autoComment.vim
-source ~/.vim/vimrc.d/tmux.vim
+let s:pathToFuncs = "~/.vim/vimrc.d/"
+
+let s:funcsToSource = ["statusline.vim",
+                      \"python.vim",
+                      \"continuation.vim",
+                      \"fakeCapsLock.vim",
+                      \"toggleClipboard.vim",
+                      \"toggleNERDTree.vim",
+                      \"toggleDot.vim",
+                      \"toggleHyphen.vim",
+                      \"numbering.vim",
+                      \"execOnReturn.vim",
+                      \"indentation.vim",
+                      \"completion.vim",
+                      \"autoComment.vim",
+                      \"tmux.vim"]
+
+function SourceFuncs()
+  let numOfFuncs = len(s:funcsToSource)
+  let currentFunc = 0
+  while currentFunc < numOfFuncs
+    execute "source " . s:pathToFuncs . s:funcsToSource[currentFunc]
+    let currentFunc = currentFunc + 1
+  endwhile
+  return ''
+endfunction
+
+call SourceFuncs()
