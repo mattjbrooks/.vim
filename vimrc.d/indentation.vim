@@ -4,6 +4,8 @@ autocmd BufNewFile,BufRead *.html,*.xhtml setl cinwords+=case,default
 autocmd FileType html,xhtml setl syn=php
 autocmd FileType htmldjango setl noautoindent nocindent smartindent indentexpr=
 
+let g:usingDjango = 1  " If set will switch filetype to htmldjango if line contains {% or {#
+
 function CheckSyntax()
   if &ft == 'html' || &ft == 'xhtml'
     if !exists("*synstack")
@@ -20,10 +22,13 @@ function CheckSyntax()
         endif
       endfor
     elseif len(syntaxlist) == 0
-      if line_contents =~ "{% extends" || line_contents =~ "{% block" || line_contents =~ "{% load" || line_contents =~ "{#"
-        setlocal ft=htmldjango
-        setlocal syn=htmldjango
-        return
+      let extension = expand('%:e')
+      if g:usingDjango && extension =~ "html"
+        if line_contents =~ "{%" || line_contents =~ "{#"
+          setlocal ft=htmldjango
+          setlocal syn=htmldjango
+          return
+        endif
       endif
     endif
     setlocal noautoindent nocindent nosmartindent indentexpr=HtmlIndentGet(v:lnum)
