@@ -43,29 +43,37 @@ function FindFolderPath()
   return pathtofolder
 endfunction
 
-function FixIndentation(linesinsnippet)
-  if &ft != "python"
-    execute 'normal! '.a:linesinsnippet.'=='
-    " delete previous word and join lines
-    normal! bdwJ
+function IndentSnippet(linesinsnippet)
+  if &ft == "python"
+    call IndentPythonSnippet(a:linesinsnippet)
   else
-    " Start of python specific bit:
-    " Get the current cursor column
-    let posbefore = col(".")
-    normal! bdwJ
-    " Get the position of first nonspace character on line
-    let startofline = match(getline('.'),'\S')+1
-    if startofline > posbefore && a:linesinsnippet > 1
-      let spacesneeded = startofline - posbefore
-      " We want to add the offset to the start of every line below the current one until the end of the snippet
-      let linebelow = line('.') + 1
-      let endofsnippet = linebelow + a:linesinsnippet - 2 " for a 2 line snippet endofsnippet == linebelow
-      let stringofspaces = repeat(' ',spacesneeded)
-      " Now we search and add the string to the start of the required lines, the normal! `` at the end returns the
-      " cursor to the correct positon
-      execute 'silent '. linebelow . ',' . endofsnippet . 's/^/' . stringofspaces . '/ |normal! ``'
-    endif
-    " End of python specific bit
+    call IndentNonPythonSnippet(a:linesinsnippet)
+  endif
+endfunction
+
+function IndentNonPythonSnippet(linesinsnippet)
+  " Use == to indent the lines of the snippet
+  execute 'normal! '.a:linesinsnippet.'=='
+  " delete previous word and join lines
+  normal! bdwJ
+endfunction
+
+function IndentPythonSnippet(linesinsnippet)
+  " As we cannot just use == for python snippets and then delete and join:
+  " first, get the current cursor column:
+  let posbefore = col(".")
+  normal! bdwJ
+  " then get the position of first nonspace character on line:
+  let startofline = match(getline('.'),'\S')+1
+  if startofline > posbefore && a:linesinsnippet > 1
+    let spacesneeded = startofline - posbefore
+    " we want to add the offset to the start of every line below the current one until the end of the snippet
+    let linebelow = line('.') + 1
+    let endofsnippet = linebelow + a:linesinsnippet - 2 " for a 2 line snippet endofsnippet == linebelow
+    let stringofspaces = repeat(' ',spacesneeded)
+    " now search and add the string to the start of the required lines (the normal! `` at the end returns the
+    " cursor to the correct positon)
+    execute 'silent '. linebelow . ',' . endofsnippet . 's/^/' . stringofspaces . '/ |normal! ``'
   endif
 endfunction
 
@@ -74,7 +82,7 @@ function CarriageReturnInEntry()
   if b:navigating_snippet == 1 && b:did_snippet_nav == 1
     let b:multiline_snippet_entry = 1
   endif
-  " Disable snippet navigation so we can use tabs in multiline entry (use tab in normal mode to continue navigation)
+  " disable snippet navigation so we can use tabs in multiline entry (use tab in normal mode to continue navigation)
   let b:navigating_snippet = 0
   return ''
 endfunction
@@ -124,7 +132,7 @@ function InsertATab()
   endif
 endfunction
 
-function SnippetNav()
+function NavigateSnippet()
   call FindNextEntry()
   let b:multiline_snippet_entry = 0
   if b:done_all_entries && b:navigating_snippet
@@ -133,7 +141,7 @@ function SnippetNav()
   endif
 endfunction
 
-function SnippetLoad()
+function LoadSnippet()
   " Get the character under the cursor
   let character = CurrentCharacter()
   " Get the ascii value of that character
@@ -155,7 +163,7 @@ function SnippetLoad()
       let b:did_snippet_nav = 0
       let linesafter = line('$')
       let linesinsnippet = linesafter - linesbefore
-      call FixIndentation(linesinsnippet)
+      call IndentSnippet(linesinsnippet)
       " Get the character under the cursor
       let character = CurrentCharacter()
       " If the character is a space delete it (gets rid of space if added by join)
@@ -165,17 +173,17 @@ function SnippetLoad()
       " Turn on snippet navigation
       let b:navigating_snippet = 1
       " try to jump to first occurrence
-      call SnippetNav()
+      call NavigateSnippet()
     else " Filename not readable
       if b:multiline_snippet_entry
-        call SnippetNav() " If a multiline entry try to nav to next entry
+        call NavigateSnippet() " If a multiline entry try to nav to next entry
       else
         echo "Not found in " . pathtofolder
       endif
     endif
   else " Cursor was not over an alphanumeric character
     if b:multiline_snippet_entry
-      call SnippetNav() " If a multiline entry try to nav to next entry
+      call NavigateSnippet() " If a multiline entry try to nav to next entry
     endif
   endif
 endfunction
@@ -204,9 +212,9 @@ endfunction
 function NormalModeTabMod()
   call CheckForEntries()
   if b:navigating_snippet
-    call SnippetNav()
+    call NavigateSnippet()
   else
-    call SnippetLoad()
+    call LoadSnippet()
   endif
 endfunction
 
@@ -234,7 +242,7 @@ function InsertModeTabMod()
     endif
   endif
   if b:navigating_snippet == 1 " if we are navigating rather than loading snippets
-    call SnippetNav()   " call SnippetNav() to jump to next «»
+    call NavigateSnippet()   " call NavigateSnippet() to jump to next «»
   else
     if col('.')>1 && strpart( getline('.'), col('.')-2, 3 ) =~ '^\w'
       return "\<C-N>"
