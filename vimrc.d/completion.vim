@@ -141,15 +141,22 @@ function NavigateSnippet()
   endif
 endfunction
 
+function IsAlphanumeric(character)
+  let ascii = char2nr(a:character)
+  if (ascii >= 48 && ascii <= 57) || (ascii >= 65 && ascii <= 90) || (ascii >= 97 && ascii <= 122)
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
 function LoadSnippet()
   " Get the character under the cursor
   let character = CurrentCharacter()
-  " Get the ascii value of that character
-  let ascii = char2nr(character)
   " Check if cursor is over alphanumeric character (as <cword> will still return word
   " when over non-alphanumeric characters before word, such as space, where we do not
   " want to expand snippet)
-  if (ascii >= 48 && ascii <= 57) || (ascii >= 65 && ascii <= 90) || (ascii >= 97 && ascii <= 122)
+  if IsAlphanumeric(character)
     let pathtofolder = FindFolderPath()
     let pathtofile = pathtofolder . expand("<cword>")
     " Check if filename readable
@@ -233,6 +240,7 @@ function InsertModeTabMod()
       if len(syntaxlist) > 0
         for syntaxitem in syntaxlist
           if syntaxitem == "htmlEndTag"
+            " Use omni complete Ctrl-X Ctrl-O to complete html tag.  Then reposition.
             return "\<C-x>\<C-o>\<Esc>" . positioning
           elseif syntaxitem == "javaScript"
             return "script>\<Esc>a\<Esc>" . positioning
@@ -241,8 +249,10 @@ function InsertModeTabMod()
       endif
     endif
   endif
-  if b:navigating_snippet == 1 " if we are navigating rather than loading snippets
-    call NavigateSnippet()   " call NavigateSnippet() to jump to next «»
+  if b:navigating_snippet == 1
+    " if we are navigating rather than loading snippets then
+    " call NavigateSnippet() to jump to next «»
+    call NavigateSnippet()
   else
     if col('.')>1 && strpart( getline('.'), col('.')-2, 3 ) =~ '^\w'
       return "\<C-N>"
