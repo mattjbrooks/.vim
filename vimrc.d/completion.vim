@@ -8,8 +8,8 @@ function SetBufVars()
   if !exists("b:multiline_snippet_entry")
     let b:multiline_snippet_entry = 0
   endif
-  if !exists("b:did_snippet_nav")
-    let b:did_snippet_nav = 0
+  if !exists("b:found_entry")
+    let b:found_entry = 0
   endif
 endfunction
 
@@ -49,6 +49,12 @@ function IndentSnippet(linesinsnippet)
   else
     call IndentNonPythonSnippet(a:linesinsnippet)
   endif
+  " Get the character under the cursor
+  let character = CurrentCharacter()
+  " If the character is a space delete it (gets rid of space if added by join)
+  if character == " "
+    normal! x
+  endif
 endfunction
 
 function IndentNonPythonSnippet(linesinsnippet)
@@ -79,7 +85,7 @@ endfunction
 
 function CarriageReturnInEntry()
   " Check we are navigating snippet and have navigated to at least the first entry:
-  if b:navigating_snippet == 1 && b:did_snippet_nav == 1
+  if b:navigating_snippet && b:found_entry
     let b:multiline_snippet_entry = 1
   endif
   " disable snippet navigation so we can use tabs in multiline entry (use tab in normal mode to continue navigation)
@@ -116,7 +122,7 @@ function FindNextEntry()
       normal! x
       startinsert
     endif
-    let b:did_snippet_nav = 1
+    let b:found_entry = 1
   else
     let b:done_all_entries = 1
   endif
@@ -127,7 +133,7 @@ function InsertATab()
     startinsert! " if we're at the end of the line we need to append
   endif
   " insert a tab (triggers InsertModeTabMod() with b:navigating_snippet set to zero)
-  if b:did_snippet_nav == 1
+  if b:found_entry
     call feedkeys("\<Tab>")
   endif
 endfunction
@@ -153,7 +159,7 @@ endfunction
 function LoadSnippet()
   " Get the character under the cursor
   let character = CurrentCharacter()
-  " Check if cursor is over alphanumeric character (as <cword> will still return word
+  " check if cursor is over alphanumeric character (as <cword> will still return word
   " when over non-alphanumeric characters before word, such as space, where we do not
   " want to expand snippet)
   if IsAlphanumeric(character)
@@ -161,42 +167,35 @@ function LoadSnippet()
     let pathtofile = pathtofolder . expand("<cword>")
     " Check if filename readable
     if filereadable(glob(pathtofile))
-      " Delete anything on line after cursor position
+      " delete anything on line after cursor position
       normal! lD
       let linesbefore = line('$') " Count number of lines
-      " load snippet starting on line below (without following the indentation of current line)
+      " load snippet starting on line below
       execute 'silent! r' . pathtofile
-      " set did_snippet_nav to zero as we have just loaded a new snippet and have not yet navigated to first entry
-      let b:did_snippet_nav = 0
+      let b:found_entry = 0
       let linesafter = line('$')
       let linesinsnippet = linesafter - linesbefore
       call IndentSnippet(linesinsnippet)
-      " Get the character under the cursor
-      let character = CurrentCharacter()
-      " If the character is a space delete it (gets rid of space if added by join)
-      if character == " "
-        normal! x
-      endif
-      " Turn on snippet navigation
+      " turn on snippet navigation
       let b:navigating_snippet = 1
-      " try to jump to first occurrence
+      " try to jump to first entry
       call NavigateSnippet()
     else " Filename not readable
       if b:multiline_snippet_entry
-        call NavigateSnippet() " If a multiline entry try to nav to next entry
+        call NavigateSnippet() " if a multiline entry try to nav to next entry
       else
         echo "Not found in " . pathtofolder
       endif
     endif
   else " Cursor was not over an alphanumeric character
     if b:multiline_snippet_entry
-      call NavigateSnippet() " If a multiline entry try to nav to next entry
+      call NavigateSnippet() " if a multiline entry try to nav to next entry
     endif
   endif
 endfunction
 
 function CheckForEntries()
-  if b:navigating_snippet == 1
+  if b:navigating_snippet
     let line_num = line('.')
     while line_num <= line('$')
       if match(getline(line_num), '«\w*»') != -1
@@ -249,7 +248,7 @@ function InsertModeTabMod()
       endif
     endif
   endif
-  if b:navigating_snippet == 1
+  if b:navigating_snippet
     " if we are navigating rather than loading snippets then
     " call NavigateSnippet() to jump to next «»
     call NavigateSnippet()
@@ -271,7 +270,7 @@ endfunction
 
 " <leader><Tab> in normal mode to manually toggle between snippet loading and snippet navigation
 function SnippetToggle()
-  if b:navigating_snippet == 1 || b:multiline_snippet_entry == 1
+  if b:navigating_snippet || b:multiline_snippet_entry
     let b:navigating_snippet = 0
     let b:multiline_snippet_entry = 0
     echo "snippet nav off"
