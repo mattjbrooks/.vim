@@ -1,10 +1,9 @@
-" Workaround to improve indentation of javascript and php inside html
+" Workaround to improve indentation for files which combine html with other languages
+
+let s:usingDjango = 1  " if set will switch filetype to htmldjango if line contains {% or {#
 
 autocmd BufNewFile,BufRead *.html,*.xhtml setl cinwords+=case,default
-autocmd FileType html,xhtml setl syn=php
 autocmd FileType htmldjango setl noautoindent nocindent smartindent indentexpr=
-
-let g:usingDjango = 1  " If set will switch filetype to htmldjango if line contains {% or {#
 
 function CheckSyntax()
   if &ft == 'html' || &ft == 'xhtml'
@@ -23,10 +22,11 @@ function CheckSyntax()
       endfor
     elseif len(syntaxlist) == 0
       let extension = expand('%:e')
-      if g:usingDjango && extension =~ "html"
+      if s:usingDjango && extension =~ "html"
         if line_contents =~ "{%" || line_contents =~ "{#"
           setlocal ft=htmldjango
           setlocal syn=htmldjango
+          syn sync fromstart
           return
         endif
       endif
