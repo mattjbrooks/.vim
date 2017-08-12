@@ -1,6 +1,6 @@
 " Workaround to improve indentation for files which combine html with other languages
 
-let s:usingDjango = 1  " if set will switch filetype to htmldjango if line contains {% or {#
+let s:djangoTemplates = 1  " if set change ft to htmldjango if line contains {% or {#
 
 autocmd BufNewFile,BufRead *.html,*.xhtml setl cinwords+=case,default
 autocmd FileType htmldjango setl noautoindent nocindent smartindent indentexpr=
@@ -20,14 +20,16 @@ function CheckSyntax()
           return
         endif
       endfor
-    elseif len(syntaxlist) == 0
-      let extension = expand('%:e')
-      if s:usingDjango && extension =~ "html"
-        if line_contents =~ "{%" || line_contents =~ "{#"
-          setlocal ft=htmldjango
-          setlocal syn=htmldjango
-          syn sync fromstart
-          return
+    elseif s:djangoTemplates
+      if len(syntaxlist) == 0
+        let extension = expand('%:e')
+        if &ft != 'htmldjango' && extension =~ 'html'
+          if line_contents =~ "{%" || line_contents =~ "{#"
+            setlocal ft=htmldjango
+            setlocal syn=htmldjango
+            syn sync fromstart
+            return
+          endif
         endif
       endif
     endif
