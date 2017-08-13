@@ -12,7 +12,7 @@ function CommentList()
     let start_comment = "#"
   elseif &ft == 'javascript' || extension == 'php'
     let start_comment = "//"
-  elseif &ft == 'html' || &ft == 'xhtml'
+  elseif &ft =~ 'html'
     if IsScript()
       let start_comment = '//'
     else
