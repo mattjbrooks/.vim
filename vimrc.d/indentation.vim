@@ -22,9 +22,9 @@ function CheckSyntax()
       endfor
     elseif s:djangoTemplates
       if len(syntaxlist) == 0
-        let extension = expand('%:e')
-        if &ft != 'htmldjango' && extension =~ 'html'
-          if line_contents =~ "{%" || line_contents =~ "{#"
+        if line_contents =~ "{%" || line_contents =~ "{#"
+          let extension = expand('%:e')
+          if &ft != 'htmldjango' && extension =~ 'html'
             setlocal ft=htmldjango
             setlocal syn=htmldjango
             syn sync fromstart
