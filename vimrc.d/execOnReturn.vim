@@ -5,12 +5,9 @@
 let g:funcsToExecOnCR = []
 
 function DoCRFuncs()
-  let numOfFuncs = len(g:funcsToExecOnCR)
-  let currentFunc = 0
-  while currentFunc < numOfFuncs
-    execute "call " . g:funcsToExecOnCR[currentFunc]
-    let currentFunc = currentFunc + 1
-  endwhile
+  for myFunction in g:funcsToExecOnCR
+    execute "call " . myFunction
+  endfor
   return ''
 endfunction
 
