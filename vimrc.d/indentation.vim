@@ -39,36 +39,3 @@ endfunction
 
 autocmd insertEnter * :call CheckSyntax()
 let g:funcsToExecOnCR = g:funcsToExecOnCR + ['CheckSyntax()']
-
-" F6 in normal mode to toggle the above for *.php files by switching ft
-
-let s:useHTMLFiletype = 0
-
-function ToggleHTMLFiletype()
-  let extension = expand('%:e')
-  if extension == 'php'
-    if s:useHTMLFiletype
-      let s:useHTMLFiletype = 0
-      setlocal ft=php
-      echo 'php'
-    else
-      let s:useHTMLFiletype = 1
-      setlocal ft=html
-      setlocal syn=php
-      echo 'html + smart'
-    endif
-  endif
-endfunction
-
-function UseHTMLFiletype()
-  if s:useHTMLFiletype
-    setlocal ft=html
-    setlocal syn=php
-  else
-    setlocal ft=php
-  endif
-endfunction
-
-nnoremap <silent> <F6> :call ToggleHTMLFiletype()<CR>
-
-autocmd BufNewFile,BufRead *.php call UseHTMLFiletype()
