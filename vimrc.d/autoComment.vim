@@ -5,12 +5,11 @@ let s:left = 0 | let s:right = 1
 function CommentList()
   let start_comment = ""
   let end_comment = ""
-  let extension = expand('%:e')
   if &ft == 'vim'
     let start_comment = '"'
   elseif &ft == 'python' || &ft == 'sh'
     let start_comment = "#"
-  elseif &ft == 'javascript' || extension == 'php'
+  elseif &ft == 'javascript' || &ft == 'php'
     let start_comment = "//"
   elseif &ft =~ 'html'
     if IsScript()
