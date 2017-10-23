@@ -82,12 +82,6 @@ nnoremap <leader>o <C-w>o
 " leader r to rotate windows
 nnoremap <leader>r <C-w>r
 
-" leader H,J,K,L to move current window to left,bottom,top,right in normal mode
-nnoremap <leader>H <C-w>H
-nnoremap <leader>J <C-w>J
-nnoremap <leader>K <C-w>K
-nnoremap <leader>L <C-w>L
-
 " <leader>= to equalize windows
 nnoremap <leader>= <C-w>=
 
