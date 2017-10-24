@@ -11,4 +11,4 @@ function SetCompleteToggle()
   endif
 endfunction
 
-nnoremap <F6> :call SetCompleteToggle()<CR>
+nnoremap <F8> :call SetCompleteToggle()<CR>
