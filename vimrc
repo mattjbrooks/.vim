@@ -13,7 +13,7 @@ set confirm                     " confirm whether to save file, instead of faili
 set autochdir                   " set working directory to file being edited
 set wildmenu                    " use statusline to show possible completions for files and commands
 set timeoutlen=600              " reduce time waited for mapped key sequences
-set complete=.                  " by default autocomplete only based on the current buffer
+set complete-=i                 " disable completion from include files
 set shortmess+=I                " disable intro screen
 set lazyredraw                  " don't redraw for untyped actions
 set sessionoptions-=folds       " don't store folds in sessions
