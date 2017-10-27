@@ -146,6 +146,12 @@ autocmd BufEnter *
 " W! to write as root with sudo
 cmap W! w !sudo tee % > /dev/null && sudo -k
 
+" Avoid E173 on quit
+if argc() > 1
+  silent blast
+  silent bfirst
+endif
+
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
