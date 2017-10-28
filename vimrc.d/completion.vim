@@ -100,7 +100,7 @@ function FindNextEntry()
   let character = CurrentCharacter()
   if character != "«"
     " If we are not over a « search for the next «» or «word»
-    let dosearch = search('«\w*»')
+    call search('«\w*»')
   endif
   let character = CurrentCharacter()
   if character == "«"
