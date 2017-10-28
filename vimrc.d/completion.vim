@@ -1,19 +1,14 @@
 " Spaghetti for snippets and tab completion
 
-" Assign starting values of variables for buffer if not already set
-function SetBufVars()
-  if !exists("b:navigating_snippet")
-    let b:navigating_snippet = 0
-  endif
-  if !exists("b:multiline_snippet_entry")
-    let b:multiline_snippet_entry = 0
-  endif
-  if !exists("b:found_entry")
-    let b:found_entry = 0
-  endif
+function SetBufferVariables()
+  for var in ["b:navigating_snippet", "b:multiline_snippet_entry", "b:found_entry"]
+    if !exists(var)
+      execute "let " . var . " = 0"
+    endif
+  endfor
 endfunction
 
-autocmd BufNewFile,BufRead,BufEnter * call SetBufVars()
+autocmd BufNewFile,BufRead,BufEnter * call SetBufferVariables()
 
 function CurrentCharacter()
   " Returns the character under the cursor (uses registers to ensure it works for digraphs)
