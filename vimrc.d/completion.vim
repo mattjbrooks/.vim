@@ -240,7 +240,6 @@ endfunction
 function CompleteTag()
   let syntax_list = map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
   if len(syntax_list) > 0
-    let junk = ""
     for syntax_item in syntax_list
       let completion_string = CompletionString(syntax_item)
       if completion_string != ''
