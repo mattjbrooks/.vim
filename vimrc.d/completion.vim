@@ -25,12 +25,11 @@ endfunction
 function FindFolderPath()
   " Set the folder to look for snippet
   let pathtofolder = "~/.vim/snippets/"
-  let extension = expand('%:e')
   if &ft == 'python'
     let pathtofolder = pathtofolder . "python/"
   elseif &ft == 'javascript'
     let pathtofolder = pathtofolder . "javascript/"
-  elseif extension == 'php'
+  elseif &ft == 'php'
     let pathtofolder = pathtofolder . "php/"
   elseif &ft == 'html' || &ft == 'xhtml'
     let pathtofolder = pathtofolder . "html/"
