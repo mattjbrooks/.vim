@@ -218,27 +218,48 @@ function NormalModeTabMod()
   endif
 endfunction
 
+" Return string to complete syntax item (if possible,
+" otherwise returns an empty string)
+function CompletionString(syntax_item)
+  if a:syntax_item == "htmlEndTag"
+    let tag_complete = "\<C-x>\<C-o>\<Esc>"
+  elseif a:syntax_item == "javaScript"
+    let tag_complete = "script>\<Esc>a\<Esc>"
+  else
+    return ''
+  endif
+  if &ft == "htmldjango"
+    let positioning = "A"
+  else
+    let positioning = "==A"
+  endif
+  return tag_complete . positioning
+endfunction
+
+" Iterate through syntax list looking for completion string
+function CompleteTag()
+  let syntax_list = map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+  if len(syntax_list) > 0
+    let junk = ""
+    for syntax_item in syntax_list
+      let completion_string = CompletionString(syntax_item)
+      if completion_string != ''
+        return completion_string
+      endif
+    endfor
+  endif
+  return ''
+endfunction
+
 " Tab completion in insert mode:
 function InsertModeTabMod()
   if &ft =~ 'html' || &ft == 'php'
     " get the two characters to the left of the cursor
     let previous_chars = getline('.')[col('.')-3 : col('.')-2]
     if previous_chars == "<\/"
-      if &ft == "htmldjango"
-        let positioning = "A"
-      else
-        let positioning = "==A"
-      endif
-      let syntaxlist = map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-      if len(syntaxlist) > 0
-        for syntaxitem in syntaxlist
-          if syntaxitem == "htmlEndTag"
-            " Use omni complete Ctrl-X Ctrl-O to complete html tag.  Then reposition.
-            return "\<C-x>\<C-o>\<Esc>" . positioning
-          elseif syntaxitem == "javaScript"
-            return "script>\<Esc>a\<Esc>" . positioning
-          endif
-        endfor
+      let complete_tag = CompleteTag()
+      if complete_tag != ''
+        return complete_tag
       endif
     endif
   endif
