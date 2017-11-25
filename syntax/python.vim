@@ -138,7 +138,7 @@ if s:Enabled("g:python_highlight_all")
     call s:EnableByDefault("g:python_highlight_builtin_funcs")
   endif
   call s:EnableByDefault("g:python_highlight_exceptions")
-  call s:EnableByDefault("g:python_highlight_string_formatting")
+  " call s:EnableByDefault("g:python_highlight_string_formatting")
   call s:EnableByDefault("g:python_highlight_string_format")
   call s:EnableByDefault("g:python_highlight_string_templates")
   call s:EnableByDefault("g:python_highlight_indent_errors")
