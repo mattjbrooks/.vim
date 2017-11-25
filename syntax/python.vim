@@ -80,17 +80,15 @@
 "    python_highlight_all                   Enable all the options above
 "                                           NOTE: This option don't override
 "                                           any previously set options
+"    python_slow_sync                       Can be set to 0 for slow machines
 "
-" +----------------------------------------------------------------+
-" --- Set a few preferences here rather than in my .vimrc - Matt ---
-" +----------------------------------------------------------------+
+" Added a few preferences here - Matt
+" -----------------------------------
 let python_highlight_all = 1
 let python_highlight_indent_errors = 0
 let python_highlight_space_errors = 0
+let python_highlight_string_formatting = 0
 "
-"    python_slow_sync                       Can be set to 0 for slow machines
-"
-
 " For version 5.x: Clear all syntax items
 " For versions greater than 6.x: Quit when a syntax file was already loaded
 if version < 600
@@ -138,7 +136,7 @@ if s:Enabled("g:python_highlight_all")
     call s:EnableByDefault("g:python_highlight_builtin_funcs")
   endif
   call s:EnableByDefault("g:python_highlight_exceptions")
-  " call s:EnableByDefault("g:python_highlight_string_formatting")
+  call s:EnableByDefault("g:python_highlight_string_formatting")
   call s:EnableByDefault("g:python_highlight_string_format")
   call s:EnableByDefault("g:python_highlight_string_templates")
   call s:EnableByDefault("g:python_highlight_indent_errors")
