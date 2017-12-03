@@ -1,4 +1,4 @@
-" <F6> to toggle between completion using all buffers and tags
+" <F8> to toggle between completion using all buffers and tags (default)
 " and completion only using the current buffer
 
 function SetCompleteToggle()
