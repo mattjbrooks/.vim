@@ -37,7 +37,7 @@ function IsScript()
   endif
 endfunction
 
-function FindLeftmost(line)
+function FindLeftmostColumn(line)
   let line_num = a:line['top']
   while line_num <= a:line['bottom']
     execute "normal! " . line_num . "gg"
@@ -211,7 +211,7 @@ function VisualModeComment()
 
   if symbol_dict['end'] == ""
     " Find leftmost column
-    let leftmost_col = FindLeftmost(line)
+    let leftmost_col = FindLeftmostColumn(line)
 
     " Find left and right pos where starting comment string would go
     let position = {'left': 0, 'right': 0}
@@ -276,7 +276,7 @@ function VisualModeComment()
 
     let slices = SlicesFromSelection(line_contents, column, symbol_len)
     let has_comment = IsSelectionCommented(slices, symbol_dict)
-    let leftmost_col = FindLeftmost(line)
+    let leftmost_col = FindLeftmostColumn(line)
     let stringofspaces = repeat(' ', leftmost_col - 1)
 
     " Add or remove comments as needed
