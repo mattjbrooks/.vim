@@ -1,7 +1,3 @@
-let s:start = 0 | let s:end = 1
-let s:top = 0 | let s:bottom = 1
-let s:left = 0 | let s:right = 1
-
 function CommentSymbols()
   let start_of_comment = ""
   let end_of_comment = ""
@@ -42,8 +38,8 @@ function IsScript()
 endfunction
 
 function FindLeftmost(line)
-  let line_num = a:line[s:top]
-  while line_num <= a:line[s:bottom]
+  let line_num = a:line['top']
+  while line_num <= a:line['bottom']
     execute "normal! " . line_num . "gg"
     let current_line = getline('.')
     if current_line !~ '^\s*$'
@@ -62,12 +58,12 @@ function FindLeftmost(line)
 endfunction
 
 function CheckForString(line, position, string)
-  let line_num = a:line[s:top]
+  let line_num = a:line['top']
   let slices_match_string = 1
-  while line_num <= a:line[s:bottom]
+  while line_num <= a:line['bottom']
     execute "normal! " . line_num . "gg"
     let current_line = getline('.')
-    let slice_of_line = current_line[(a:position[s:left]):(a:position[s:right])]
+    let slice_of_line = current_line[(a:position['left']):(a:position['right'])]
     if slice_of_line != a:string && current_line !~ '^\s*$'
       let slices_match_string = 0
     endif
@@ -137,31 +133,31 @@ function RepositionAfterRemove(original_pos, left_col, symbol_length)
 endfunction
 
 function SlicesFromLine(current_line, column, symbol_len)
-  let slice = ['', '']
+  let slice = {'start': '', 'end': ''}
 
-  let left_pos = a:column[s:left] - 1
+  let left_pos = a:column['left'] - 1
   let right_pos = left_pos + a:symbol_len['start'] - 1
-  let slice[s:start] = a:current_line[(left_pos):(right_pos)]
+  let slice['start'] = a:current_line[(left_pos):(right_pos)]
 
   if a:symbol_len['end'] > 0
-    let right_pos = a:column[s:right] - 1
+    let right_pos = a:column['right'] - 1
     let left_pos = right_pos - a:symbol_len['end'] + 1
-    let slice[s:end] = a:current_line[(left_pos):(right_pos)]
+    let slice['end'] = a:current_line[(left_pos):(right_pos)]
   endif
 
   return slice
 endfunction
 
 function IsLineCommented(slice, symbol_dict)
-  let has_comment = [0,0]
+  let has_comment = {'start': 0, 'end': 0}
 
-  if a:slice[s:start] == a:symbol_dict['start']
-    let has_comment[s:start] = 1
+  if a:slice['start'] == a:symbol_dict['start']
+    let has_comment['start'] = 1
   endif
 
   if a:symbol_dict['end'] != ""
-    if a:slice[s:end] == a:symbol_dict['end']
-      let has_comment[s:end] = 1
+    if a:slice['end'] == a:symbol_dict['end']
+      let has_comment['end'] = 1
     endif
   endif
 
@@ -169,16 +165,20 @@ function IsLineCommented(slice, symbol_dict)
 endfunction
 
 function SlicesFromSelection(line_contents, column, symbol_len)
-  let slices = [['',''],['','']]
-  let slices[s:top] = SlicesFromLine(a:line_contents[s:top], a:column[s:top], a:symbol_len)
-  let slices[s:bottom] = SlicesFromLine(a:line_contents[s:bottom], a:column[s:bottom], a:symbol_len)
+  let slices = {'top': {'left': '', 'right': ''},
+               \'bottom': {'left': '', 'right': ''}
+               \}
+  let slices['top'] = SlicesFromLine(a:line_contents['top'], a:column['top'], a:symbol_len)
+  let slices['bottom'] = SlicesFromLine(a:line_contents['bottom'], a:column['bottom'], a:symbol_len)
   return slices
 endfunction
 
 function IsSelectionCommented(slices, symbol_dict)
-  let has_comment = [['',''],['','']]
-  let has_comment[s:top] = IsLineCommented(a:slices[s:top], a:symbol_dict)
-  let has_comment[s:bottom] = IsLineCommented(a:slices[s:bottom], a:symbol_dict)
+  let has_comment = {'top': {'left': '', 'right': ''},
+                    \'bottom': {'left': '', 'right': ''}
+                    \}
+  let has_comment['top'] = IsLineCommented(a:slices['top'], a:symbol_dict)
+  let has_comment['bottom'] = IsLineCommented(a:slices['bottom'], a:symbol_dict)
   return has_comment
 endfunction
 
@@ -193,17 +193,17 @@ function VisualModeComment()
   " Get a list of the length of those strings
   let symbol_len = {'start': len(symbol_dict['start']), 'end': len(symbol_dict['end'])}
 
-  let line = [0, 0]
+  let line = {'top': 0, 'bottom': 0}
   " Find start and end lines
   normal! \<Esc>`<
-  let line[s:top] = line('.')
+  let line['top'] = line('.')
   normal! `>
-  let line[s:bottom] = line('.')
+  let line['bottom'] = line('.')
 
   " Switch line_start and line_end if needed
-  if line[s:top] > line[s:bottom]
-    let line[s:bottom] = line[s:top]
-    let line[s:top] = line('.')
+  if line['top'] > line['bottom']
+    let line['bottom'] = line['top']
+    let line['top'] = line('.')
   endif
 
   let paste = &paste
@@ -214,17 +214,17 @@ function VisualModeComment()
     let leftmost_col = FindLeftmost(line)
 
     " Find left and right pos where starting comment string would go
-    let position = [0,0]
-    let position[s:left] = leftmost_col - 1
-    let position[s:right] = position[s:left] + symbol_len['start'] - 1
+    let position = {'left': 0, 'right': 0}
+    let position['left'] = leftmost_col - 1
+    let position['right'] = position['left'] + symbol_len['start'] - 1
     
     " Check if any non-blank lines in highlighted text have no comment
     let all_commented = CheckForString(line, position, symbol_dict['start'])
 
     " Add or remove comments to non blank lines
     if all_commented == 0
-      let line_num = line[s:top]
-      while line_num <= line[s:bottom]
+      let line_num = line['top']
+      while line_num <= line['bottom']
         execute "normal! " . line_num . "gg"
         let current_line = getline('.')
         if current_line !~ '^\s*$'
@@ -233,21 +233,21 @@ function VisualModeComment()
         let line_num = line_num + 1
       endwhile
     else
-      let line_num = line[s:top]
-      while line_num <= line[s:bottom]
+      let line_num = line['top']
+      while line_num <= line['bottom']
         execute "normal! " . line_num . "gg"
         let current_line = getline('.')
-        let slice_of_line = current_line[(position[s:left]):(position[s:right])]
+        let slice_of_line = current_line[(position['left']):(position['right'])]
         if slice_of_line == symbol_dict['start']
           call RemoveStartComment(symbol_len['start'])
         endif
         let line_num = line_num + 1
       endwhile
-      let position[s:right] = position[s:left]
+      let position['right'] = position['left']
       let all_have_space = CheckForString(line, position, " ")
-      let line_num = line[s:top]
+      let line_num = line['top']
       if all_have_space
-        while line_num <= line[s:bottom]
+        while line_num <= line['bottom']
           execute "normal! " . line_num . "gg"
           normal! ^hx
           let line_num = line_num + 1
@@ -256,22 +256,23 @@ function VisualModeComment()
     endif
   else " if symbol_dict['end'] != ''
     " (ie if the current comment type has an end string as well as a start string)
-    let line_contents = ['','']
-    let column = [[0,0],[0,0]]
-
-    execute "normal! " . line[s:top] . "gg"
-    let line_contents[s:top] = getline('.')
+    let line_contents = {'top': '','bottom': ''}
+    let column = {'top': {'left': '', 'right': ''},
+                 \'bottom': {'left': '', 'right': ''}
+                 \}
+    execute "normal! " . line['top'] . "gg"
+    let line_contents['top'] = getline('.')
     normal! ^
-    let column[s:top][s:left] = col('.')
+    let column['top']['left'] = col('.')
     normal! $
-    let column[s:top][s:right] = col('.')
+    let column['top']['right'] = col('.')
 
-    execute "normal! " . line[s:bottom] . "gg"
-    let line_contents[s:bottom] = getline('.')
+    execute "normal! " . line['bottom'] . "gg"
+    let line_contents['bottom'] = getline('.')
     normal! ^
-    let column[s:bottom][s:left] = col('.')
+    let column['bottom']['left'] = col('.')
     normal! $
-    let column[s:bottom][s:right] = col('.')
+    let column['bottom']['right'] = col('.')
 
     let slices = SlicesFromSelection(line_contents, column, symbol_len)
     let has_comment = IsSelectionCommented(slices, symbol_dict)
@@ -279,19 +280,19 @@ function VisualModeComment()
     let stringofspaces = repeat(' ', leftmost_col - 1)
 
     " Add or remove comments as needed
-    if has_comment[s:top][s:start] && has_comment[s:bottom][s:end]
-        execute "normal! " . line[s:top] . "gg"
-        if has_comment[s:top][s:start]
+    if has_comment['top']['start'] && has_comment['bottom']['end']
+        execute "normal! " . line['top'] . "gg"
+        if has_comment['top']['start']
           call RemoveStartComment(symbol_len['start'])
           normal! ^
           let current_line = getline('.')
-          if current_line[column[s:top][s:left] - 1] == " "
+          if current_line[column['top']['left'] - 1] == " "
             normal! hx
           endif
         endif
         call RemoveSpacesIfBlank()
-        execute "normal! " . line[s:bottom] . "gg"
-        if has_comment[s:bottom][s:end]
+        execute "normal! " . line['bottom'] . "gg"
+        if has_comment['bottom']['end']
           call RemoveEndComment(symbol_len['end'])
           normal! $
           let current_line = getline('.')
@@ -301,22 +302,22 @@ function VisualModeComment()
         endif
         call RemoveSpacesIfBlank()
     else
-      if !has_comment[s:top][s:start] && line_contents[s:top] !~ '^\s*$'
-        execute "normal! " . line[s:top] . "gg"
-        call PlaceComment(column[s:top][s:left], symbol_dict['start'] . " ")
+      if !has_comment['top']['start'] && line_contents['top'] !~ '^\s*$'
+        execute "normal! " . line['top'] . "gg"
+        call PlaceComment(column['top']['left'], symbol_dict['start'] . " ")
       endif
-      if !has_comment[s:bottom][s:end] && line_contents[s:bottom] !~ '^\s*$'
-        execute "normal! " . line[s:bottom] . "gg"
+      if !has_comment['bottom']['end'] && line_contents['bottom'] !~ '^\s*$'
+        execute "normal! " . line['bottom'] . "gg"
         call AppendComment(" " . symbol_dict['end'])
       endif
-      if !has_comment[s:top][s:start] && line_contents[s:top] =~ '^\s*$'
-        execute "normal! " . line[s:top] . "gg"
+      if !has_comment['top']['start'] && line_contents['top'] =~ '^\s*$'
+        execute "normal! " . line['top'] . "gg"
         call RemoveSpacesIfBlank()
         execute "normal! 0i" . stringofspaces
         call AppendComment(symbol_dict['start'])
       endif
-      if !has_comment[s:bottom][s:end] && line_contents[s:bottom] =~ '^\s*$'
-        execute "normal! " . line[s:bottom] . "gg"
+      if !has_comment['bottom']['end'] && line_contents['bottom'] =~ '^\s*$'
+        execute "normal! " . line['bottom'] . "gg"
         call RemoveSpacesIfBlank()
         execute "normal! 0i" . stringofspaces
         call AppendComment(symbol_dict['end'])
@@ -347,30 +348,30 @@ function SingleLineComment()
 
   " If current line isn't blank (empty or composed of spaces)
   if current_line !~ '^\s*$'
-    let column = [0,0]
+    let column = {'left': 0, 'right': 0}
     let original_pos = virtcol('.') " using virtcol here in case of digraphs
     normal! ^
-    let column[s:left] = col('.')
+    let column['left'] = col('.')
     normal! $
-    let column[s:right] = col('.')
+    let column['right'] = col('.')
 
     let slices = SlicesFromLine(current_line, column, symbol_len)
     let has_comment = IsLineCommented(slices, symbol_dict)
 
     " Add or remove comment and reposition as needed:
-    if has_comment[s:start] || has_comment[s:end]
+    if has_comment['start'] || has_comment['end']
       let extra_space = 0
-      if has_comment[s:start]
+      if has_comment['start']
         call RemoveStartComment(symbol_len['start'])
         normal! ^
         let current_line = getline('.')
-        if current_line[column[s:left] - 1] == " "
+        if current_line[column['left'] - 1] == " "
           normal! hx
           let extra_space = 1
         endif
         call RemoveSpacesIfBlank()
       endif
-      if has_comment[s:end]
+      if has_comment['end']
         call RemoveEndComment(symbol_len['end'])
         normal! $
         let current_line = getline('.')
@@ -379,13 +380,13 @@ function SingleLineComment()
         endif
         call RemoveSpacesIfBlank()
       endif
-      call RepositionAfterRemove(original_pos, column[s:left], symbol_len['start'] + extra_space)
+      call RepositionAfterRemove(original_pos, column['left'], symbol_len['start'] + extra_space)
     else
-      call PlaceComment(column[s:left], symbol_dict['start'] . " ")
+      call PlaceComment(column['left'], symbol_dict['start'] . " ")
       if symbol_dict['end'] != ""
         call AppendComment(" " . symbol_dict['end'])
       endif
-      call RepositionAfterAdd(original_pos, column[s:left], symbol_len['start'] + 1)
+      call RepositionAfterAdd(original_pos, column['left'], symbol_len['start'] + 1)
     endif
   endif
 
