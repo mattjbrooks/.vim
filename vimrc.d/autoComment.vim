@@ -1,6 +1,6 @@
 function CommentSymbols()
-  let start_of_comment = ""
-  let end_of_comment = ""
+  let start_of_comment = ''
+  let end_of_comment = ''
   if &ft == 'vim'
     let start_of_comment = '"'
   elseif &ft == 'python' || &ft == 'sh'
@@ -72,7 +72,7 @@ function CheckForString(line, position, string)
   return slices_match_string
 endfunction
 
-function RemoveSpacesIfBlank()
+function ClearLineOfSpaces()
   let current_line = getline('.')
   if current_line =~ '^\s*$'
     normal! 0d$
@@ -184,13 +184,11 @@ endfunction
 
 function VisualModeComment()
 
-  " Get a list of strings to add or remove from lines
   let symbol_dict = CommentSymbols()
   if symbol_dict['start'] == ""
     return
   endif
 
-  " Get a list of the length of those strings
   let symbol_len = {'start': len(symbol_dict['start']), 'end': len(symbol_dict['end'])}
 
   let line = {'top': 0, 'bottom': 0}
@@ -200,7 +198,7 @@ function VisualModeComment()
   normal! `>
   let line['bottom'] = line('.')
 
-  " Switch line_start and line_end if needed
+  " Switch line_start and line_end if necessary
   if line['top'] > line['bottom']
     let line['bottom'] = line['top']
     let line['top'] = line('.')
@@ -218,10 +216,11 @@ function VisualModeComment()
     let position['left'] = leftmost_col - 1
     let position['right'] = position['left'] + symbol_len['start'] - 1
     
-    " Check if any non-blank lines in highlighted text have no comment
+    " Check if any lines in highlighted text have no comment, ignoring
+    " lines which are empty or consist only of spaces
     let all_commented = CheckForString(line, position, symbol_dict['start'])
 
-    " Add or remove comments to non blank lines
+    " Add or remove comments to highlighted text as needed
     if all_commented == 0
       let line_num = line['top']
       while line_num <= line['bottom']
@@ -255,7 +254,7 @@ function VisualModeComment()
       endif
     endif
   else " if symbol_dict['end'] != ''
-    " (ie if the current comment type has an end string as well as a start string)
+    " (i.e. if the comment needs an end string as well as a start string)
     let line_contents = {'top': '','bottom': ''}
     let column = {'top': {'left': '', 'right': ''},
                  \'bottom': {'left': '', 'right': ''}
@@ -290,7 +289,7 @@ function VisualModeComment()
             normal! hx
           endif
         endif
-        call RemoveSpacesIfBlank()
+        call ClearLineOfSpaces()
         execute "normal! " . line['bottom'] . "gg"
         if has_comment['bottom']['end']
           call RemoveEndComment(symbol_len['end'])
@@ -300,7 +299,7 @@ function VisualModeComment()
             normal! x
           endif
         endif
-        call RemoveSpacesIfBlank()
+        call ClearLineOfSpaces()
     else
       if !has_comment['top']['start'] && line_contents['top'] !~ '^\s*$'
         execute "normal! " . line['top'] . "gg"
@@ -312,13 +311,13 @@ function VisualModeComment()
       endif
       if !has_comment['top']['start'] && line_contents['top'] =~ '^\s*$'
         execute "normal! " . line['top'] . "gg"
-        call RemoveSpacesIfBlank()
+        call ClearLineOfSpaces()
         execute "normal! 0i" . stringofspaces
         call AppendComment(symbol_dict['start'])
       endif
       if !has_comment['bottom']['end'] && line_contents['bottom'] =~ '^\s*$'
         execute "normal! " . line['bottom'] . "gg"
-        call RemoveSpacesIfBlank()
+        call ClearLineOfSpaces()
         execute "normal! 0i" . stringofspaces
         call AppendComment(symbol_dict['end'])
       endif
@@ -346,7 +345,7 @@ function SingleLineComment()
   let paste = &paste
   set paste
 
-  " If current line isn't blank (empty or composed of spaces)
+  " If current line isn't empty or composed of spaces
   if current_line !~ '^\s*$'
     let column = {'left': 0, 'right': 0}
     let original_pos = virtcol('.') " using virtcol here in case of digraphs
@@ -369,7 +368,7 @@ function SingleLineComment()
           normal! hx
           let extra_space = 1
         endif
-        call RemoveSpacesIfBlank()
+        call ClearLineOfSpaces()
       endif
       if has_comment['end']
         call RemoveEndComment(symbol_len['end'])
@@ -378,7 +377,7 @@ function SingleLineComment()
         if current_line[col('.') - 1]  == " "
           normal! x
         endif
-        call RemoveSpacesIfBlank()
+        call ClearLineOfSpaces()
       endif
       call RepositionAfterRemove(original_pos, column['left'], symbol_len['start'] + extra_space)
     else
