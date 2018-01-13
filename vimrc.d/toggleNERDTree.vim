@@ -3,8 +3,7 @@
 function TreeToggle()
   normal! \<C-w>=
   NERDTreeToggle %:p:h
-  echo
 endfunction
 
-nnoremap <silent> <leader>t :call TreeToggle()<CR>
-vnoremap <silent> <leader>t :<C-u>call TreeToggle()<CR>
+nnoremap <silent> <leader>t :silent call TreeToggle()<CR>
+vnoremap <silent> <leader>t :<C-u>silent call TreeToggle()<CR>
