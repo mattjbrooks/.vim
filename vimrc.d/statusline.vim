@@ -13,9 +13,6 @@ set laststatus=2
 autocmd InsertEnter * highlight StatusLine cterm=none ctermfg=254 ctermbg=236
 autocmd InsertLeave * highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
 
-" change statusline background if entering a window
-autocmd WinEnter * highlight StatusLine cterm=none ctermfg=252 ctermbg=236 | let s:doClear = 2
-
 " clear the effect if the cursor moves after entering the window or if the cursor hasn't moved
 " in <updatetime> milliseconds, or if there is only one window in the current tab page
 let s:doClear = 0
@@ -41,13 +38,16 @@ function ClearOnMove()
   endif
 endfunction
 
-function ClearIfOnlyWindow()
-  if tabpagewinnr(tabpagenr(), '$') == 1
-    silent call ClearStatusline()
+function SetOnEnter()
+  if tabpagewinnr(tabpagenr(), '$') == 1 || bufname('%') =~ 'NERD_tree'
+    highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
+  else
+    highlight StatusLine cterm=none ctermfg=252 ctermbg=236
+    let s:doClear = 2
   endif
 endfunction()
 
 " set updatetime=4000
 autocmd CursorHold * silent call ClearOnHold()
 autocmd CursorMoved * silent call ClearOnMove()
-autocmd BufEnter,TabEnter * silent call ClearIfOnlyWindow()
+autocmd WinEnter,BufEnter,TabEnter * silent call SetOnEnter()
