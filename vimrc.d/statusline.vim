@@ -47,7 +47,24 @@ function SetOnEnter()
   endif
 endfunction()
 
+
+function CheckFilename()
+  " Check if the tail of the filename of the current buffer matches any others.
+  " If so, uses full path in the statusline.
+  let s:buffers = filter(range(1, bufnr('$')), 'bufexists(v:val)')
+  let s:tail = expand("%:t")
+  for buffer in s:buffers
+    if expand("#".buffer.":t") == s:tail
+      if bufnr('%') != buffer
+        set statusline=%{&ff!='unix'?'[WARNING:\ '.&ff.'\ fileformat]\ ':''}%<%F\ %h%{&mod?'[modified]\ ':''}%{ReturnCaps()}%{ReturnDot()}%{ReturnHyphen()}%r%=%-14.(%l,%c%V%)\ %P
+        return
+      endif
+    endif
+  endfor
+endfunction
+
 " set updatetime=4000
 autocmd CursorHold * silent call ClearOnHold()
 autocmd CursorMoved * silent call ClearOnMove()
 autocmd WinEnter,BufEnter,TabEnter * silent call SetOnEnter()
+autocmd BufEnter * silent call CheckFilename()
