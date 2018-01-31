@@ -49,9 +49,9 @@ endfunction()
 
 
 function CheckFilename()
-  " Check if the tail of the filename of the current buffer matches any others.
-  " If so, uses full path in the statusline.
-  let s:buffers = filter(range(1, bufnr('$')), 'bufexists(v:val)')
+  " Check if the tail of the filename of the current buffer matches any others which are listed.
+  " If so, use full path in the statusline.
+  let s:buffers = filter(range(1, bufnr('$')), 'buflisted(v:val)')
   let s:tail = expand("%:t")
   for buffer in s:buffers
     if expand("#".buffer.":t") == s:tail
