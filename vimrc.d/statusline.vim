@@ -53,14 +53,16 @@ function CheckFilename()
   " If so, use full path in the statusline.
   let s:buffers = filter(range(1, bufnr('$')), 'buflisted(v:val)')
   let s:tail = expand("%:t")
-  for buffer in s:buffers
-    if expand("#".buffer.":t") == s:tail
-      if bufnr('%') != buffer
-        set statusline=%{&ff!='unix'?'[WARNING:\ '.&ff.'\ fileformat]\ ':''}%<%F\ %h%{&mod?'[modified]\ ':''}%{ReturnCaps()}%{ReturnDot()}%{ReturnHyphen()}%r%=%-14.(%l,%c%V%)\ %P
-        return
+  if s:tail != ""
+    for buffer in s:buffers
+      if expand("#".buffer.":t") == s:tail
+        if bufnr('%') != buffer
+          set statusline=%{&ff!='unix'?'[WARNING:\ '.&ff.'\ fileformat]\ ':''}%<%F\ %h%{&mod?'[modified]\ ':''}%{ReturnCaps()}%{ReturnDot()}%{ReturnHyphen()}%r%=%-14.(%l,%c%V%)\ %P
+          return
+        endif
       endif
-    endif
-  endfor
+    endfor
+  endif
 endfunction
 
 " set updatetime=4000
