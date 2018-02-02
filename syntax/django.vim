@@ -18,7 +18,7 @@ syn match djangoError "%}\|}}\|#}"
 
 " Django template built-in tags and parameters
 " 'comment' doesn't appear here because it gets special treatment
-syn keyword djangoStatement contained autoescape csrf_token empty
+syn keyword djangoStatement contained autoescape endautoescape csrf_token empty
 " FIXME ==, !=, <, >, <=, and >= should be djangoStatements:
 " syn keyword djangoStatement contained == != < > <= >=
 syn keyword djangoStatement contained and as block endblock by cycle debug else elif
