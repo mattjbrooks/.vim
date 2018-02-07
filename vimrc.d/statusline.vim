@@ -51,11 +51,11 @@ endfunction()
 function CheckFilename()
   " Check if the tail of the filename of the current buffer matches any others which are listed.
   " If so, use full path in the statusline.
-  let s:buffers = filter(range(1, bufnr('$')), 'buflisted(v:val)')
-  let s:tail = expand("%:t")
-  if s:tail != ""
-    for buffer in s:buffers
-      if expand("#".buffer.":t") == s:tail
+  let buffers = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+  let tail = expand("%:t")
+  if tail != ""
+    for buffer in buffers
+      if expand("#".buffer.":t") == tail
         if bufnr('%') != buffer
           set statusline=%{&ff!='unix'?'[WARNING:\ '.&ff.'\ fileformat]\ ':''}%<%F\ %h%{&mod?'[modified]\ ':''}%{ReturnCaps()}%{ReturnDot()}%{ReturnHyphen()}%r%=%-14.(%l,%c%V%)\ %P
           return
