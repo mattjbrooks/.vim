@@ -15,25 +15,25 @@ autocmd InsertLeave * highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
 
 " clear the effect if the cursor moves after entering the window or if the cursor hasn't moved
 " in <updatetime> milliseconds, or if there is only one window in the current tab page
-let s:doClear = 0
+let s:clear = 0
 
 function ClearStatusline()
   highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
-  let s:doClear = 0
+  let s:clear = 0
 endfunction
 
 function ClearOnHold()
-  if s:doClear
+  if s:clear
     silent call ClearStatusline()
   endif
 endfunction
 
 function ClearOnMove()
-  " The cursor's move when entering a new window will trigger this function, setting s:doClear to 1.
+  " The cursor's move when entering a new window will trigger this function, setting s:clear to 1.
   " Then the next time the cursor moves the statusline effect will be cleared if still active.
-  if s:doClear == 2
-    let s:doClear = 1
-  elseif s:doClear == 1
+  if s:clear == 2
+    let s:clear = 1
+  elseif s:clear
     silent call ClearStatusline()
   endif
 endfunction
@@ -43,7 +43,7 @@ function SetOnEnter()
     highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
   else
     highlight StatusLine cterm=none ctermfg=252 ctermbg=236
-    let s:doClear = 2
+    let s:clear = 2
   endif
 endfunction()
 
@@ -51,10 +51,10 @@ endfunction()
 function CheckFilename()
   " Check if the tail of the filename of the current buffer matches any others which are listed.
   " If so, use full path in the statusline.
-  let buffers = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+  let listed_buffers = filter(range(1, bufnr('$')), 'buflisted(v:val)')
   let tail = expand("%:t")
   if tail != ""
-    for buffer in buffers
+    for buffer in listed_buffers
       if expand("#".buffer.":t") == tail
         if bufnr('%') != buffer
           set statusline=%{&ff!='unix'?'[WARNING:\ '.&ff.'\ fileformat]\ ':''}%<%F\ %h%{&mod?'[modified]\ ':''}%{ReturnCaps()}%{ReturnDot()}%{ReturnHyphen()}%r%=%-14.(%l,%c%V%)\ %P
