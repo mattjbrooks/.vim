@@ -17,7 +17,8 @@ let s:fileList = ["statusline.vim",
                  \"indentation.vim",
                  \"completion.vim",
                  \"autoComment.vim",
-                 \"tmux.vim"]
+                 \"tmux.vim",
+                 \"displayColor.vim"]
 
 for s:filename in s:fileList
   execute "source " . s:path . s:filename
