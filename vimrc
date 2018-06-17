@@ -143,8 +143,8 @@ autocmd BufEnter *
   \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") |
   \ q | endif
 
-" W! to write as root with sudo
-cmap W! w !sudo tee % > /dev/null && sudo -k
+" Writeasroot command to write as root with sudo
+command Writeasroot execute "w !sudo tee % > /dev/null && sudo -k"
 
 " Avoid E173 on quit
 if argc() > 1
