@@ -143,8 +143,8 @@ autocmd BufEnter *
   \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") |
   \ q | endif
 
-" Writeasroot command to write as root with sudo
-command Writeasroot execute "w !sudo tee % > /dev/null && sudo -k"
+" Sudow command to write with sudo
+command Sudow execute "w !sudo tee % > /dev/null && sudo -k"
 
 " TS command to split the tmux window, creating a smaller window under the current
 command TS silent execute "!tmux splitw -p 20" | execute ":redraw!"
