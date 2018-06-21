@@ -2,7 +2,8 @@ set nocompatible                " Use Vim settings, rather than Vi (keep at star
 set encoding=utf-8              " specify utf8 encoding
 set backspace=indent,eol,start  " allow backspacing over everything in insert mode
 set backup                      " keep a backup file
-set backupdir=~/.vimbak         " save backup files in their own directory (remember to create it)
+set backupdir=~/.vimbak,.       " save backup files in their own directory (remember to create ~/.vimbak)
+set dir=~/.vimswap,.            " save swap files in their own directory (remember to create ~/.vimswap)
 set history=200                 " keep 200 lines of command line history
 set ruler                       " show the cursor position all the time
 set showcmd                     " display incomplete commands
