@@ -21,7 +21,7 @@ endfunction
 function Hex_color()
   let current_word = expand("<cword>")
   let current_WORD = expand("<cWORD>")
-  let hex_pattern = '[0-9a-fA-F]*'
+  let hex_pattern = '^[0-9a-fA-F]*$'
   if len(current_word) == 3 || len(current_word) == 6
     if current_word =~ hex_pattern && current_WORD =~ '#' . current_word
       return '#' . current_word
