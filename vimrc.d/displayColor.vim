@@ -31,7 +31,7 @@ function Hex_color()
 endfunction
 
 function RGB_color()
-  let [line, col_of_closing_bracket] = searchpos(')', 'nc', line('.'))
+  let [line_num, col_of_closing_bracket] = searchpos(')', 'nc', line('.'))
   if col_of_closing_bracket != 0
     let line_as_string = getline('.')
     let start_of_search = col_of_closing_bracket - 18
