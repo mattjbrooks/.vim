@@ -1,52 +1,31 @@
 " The default statusline for reference:
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
-" Show warning if fileformat is not unix, make modified flag more obvious,
-" show caps lock and whether hyphen or full stop in word characters
-" (uses ReturnCaps() from fakeCapsLock.vim, ReturnHyphen() from toggleHyphen.vim and ReturnDot() from toggleDot.vim)
+" Modified statusline:
+" Show warning if fileformat is not unix
+" Make modified flag more obvious
+" Show if fake caps is active (see fakeCapsLock.vim)
+" Show if hyphen or full stop in list of word characters (see toggleHyphen.vim and toggleDot.vim)
+
 set statusline=%{&ff!='unix'?'[WARNING:\ '.&ff.'\ fileformat]\ ':''}%<%f\ %h%{&mod?'[modified]\ ':''}%{ReturnCaps()}%{ReturnDot()}%{ReturnHyphen()}%r%=%-14.(%l,%c%V%)\ %P
 
 " statusline visible
 set laststatus=2
 
+" set highlighting for non-current windows
+highlight StatusLineNC cterm=none ctermfg=242 ctermbg=235
+
 " change statusline colours in insert mode
-autocmd InsertEnter * highlight StatusLine cterm=none ctermfg=254 ctermbg=236
-autocmd InsertLeave * highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
+autocmd InsertEnter * highlight StatusLine cterm=none ctermfg=252 ctermbg=236
+autocmd InsertLeave * silent call SetStatusline()
 
-" clear the effect if the cursor moves after entering the window or if the cursor hasn't moved
-" in <updatetime> milliseconds, or if there is only one window in the current tab page
-let s:clear = 0
-
-function ClearStatusline()
-  highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
-  let s:clear = 0
-endfunction
-
-function ClearOnHold()
-  if s:clear
-    silent call ClearStatusline()
-  endif
-endfunction
-
-function ClearOnMove()
-  " The cursor's move when entering a new window will trigger this function, setting s:clear to 1.
-  " Then the next time the cursor moves the statusline effect will be cleared if still active.
-  if s:clear == 2
-    let s:clear = 1
-  elseif s:clear
-    silent call ClearStatusline()
-  endif
-endfunction
-
-function SetOnEnter()
-  if tabpagewinnr(tabpagenr(), '$') == 1 || bufname('%') =~ 'NERD_tree'
+function SetStatusline()
+  if tabpagewinnr(tabpagenr(), '$') == 1
     highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
   else
-    highlight StatusLine cterm=none ctermfg=252 ctermbg=236
-    let s:clear = 2
+    highlight StatusLine cterm=bold ctermfg=032 ctermbg=236
   endif
 endfunction()
-
 
 function CheckFilename()
   " Check if the tail of the filename of the current buffer matches any others which are listed.
@@ -65,8 +44,5 @@ function CheckFilename()
   endif
 endfunction
 
-" set updatetime=4000
-autocmd CursorHold * silent call ClearOnHold()
-autocmd CursorMoved * silent call ClearOnMove()
-autocmd WinEnter,BufEnter,TabEnter * silent call SetOnEnter()
+autocmd WinEnter,BufEnter,TabEnter * silent call SetStatusline()
 autocmd BufEnter * silent call CheckFilename()
