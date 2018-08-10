@@ -1,4 +1,4 @@
-" <F8> to toggle between completion using all buffers and tags (default)
+" <F7> to toggle between completion using all buffers and tags (default)
 " and completion only using the current buffer
 
 function SetCompleteToggle()
@@ -11,4 +11,4 @@ function SetCompleteToggle()
   endif
 endfunction
 
-nnoremap <F8> :call SetCompleteToggle()<CR>
+nnoremap <F7> :call SetCompleteToggle()<CR>
