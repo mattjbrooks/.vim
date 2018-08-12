@@ -48,4 +48,4 @@ function RGB_color()
   return ""
 endfunction
 
-map <silent> <F6> :call ShowColorUnderCursor()<CR>
+map <silent> <F7> :call ShowColorUnderCursor()<CR>
