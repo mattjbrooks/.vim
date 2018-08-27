@@ -14,13 +14,12 @@ function CheckSyntax()
     let line_contents = getline('.')
     if Javascript(syntaxlist, line_contents)
       setlocal noautoindent nocindent smartindent indentexpr=
-      return
     elseif DjangoTemplate(syntaxlist, line_contents)
       setlocal ft=htmldjango syn=htmldjango
       syn sync fromstart
-      return
+    else
+      setlocal noautoindent nocindent nosmartindent indentexpr=HtmlIndentGet(v:lnum)
     endif
-    setlocal noautoindent nocindent nosmartindent indentexpr=HtmlIndentGet(v:lnum)
   endif
 endfunction
 
