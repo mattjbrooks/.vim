@@ -147,9 +147,6 @@ autocmd BufEnter *
 " Sudow command to write with sudo
 command Sudow execute "w !sudo tee % > /dev/null && sudo -k"
 
-" TS command to split the tmux window, creating a smaller window under the current
-command TS silent execute "!tmux splitw -p 20" | execute ":redraw!"
-
 " Avoid E173 on quit
 if argc() > 1
   silent blast
