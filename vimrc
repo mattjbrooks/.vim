@@ -145,7 +145,7 @@ autocmd BufEnter *
   \ q | endif
 
 " Sudow command to write with sudo
-command Sudow execute "w !sudo tee % > /dev/null && sudo -k"
+command Sudow execute 'w !sudo tee "%" > /dev/null && sudo -k'
 
 " Avoid E173 on quit
 if argc() > 1
