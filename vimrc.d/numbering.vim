@@ -1,4 +1,4 @@
-" <F2> to toggle between standard and relative line numbering
+" <F2> to toggle between sequential and relative line numbering
 function SetupVar()
   if !exists("b:relative_numbering")
     let b:relative_numbering = 0
@@ -29,9 +29,10 @@ function RelativeNumbering()
   endif
 endfunction
 
-" Switch back to original numbering when cursor moves in normal mode or on
-" entering insert mode
-function OrigNumbering()
+" Switch back to sequential numbering when cursor moves in normal
+" mode or on entering insert mode if relative numbering has not
+" been toggled on with <F2>
+function SequentialNumbering()
   if &relativenumber
     if b:relative_numbering == 0
       setl number
@@ -43,5 +44,5 @@ endfunction
 nnoremap <silent> v :call RelativeNumbering()<CR>v
 nnoremap <silent> V :call RelativeNumbering()<CR>V
 nnoremap <silent> <C-v> :call RelativeNumbering()<CR><C-v>
-autocmd CursorMoved * silent call OrigNumbering()
-autocmd InsertEnter * silent call OrigNumbering()
+autocmd CursorMoved * silent call SequentialNumbering()
+autocmd InsertEnter * silent call SequentialNumbering()
