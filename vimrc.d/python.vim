@@ -9,4 +9,17 @@ function ColorCol()
   endif
 endfunction
 
+function MatchBracketPos()
+  let line_content = getline(".")
+  let brackets = [')', '}', ']']
+  for bracket in brackets
+    if match(line_content, '^\s*' . bracket . '$') != -1
+      " Add bracket, move up and delete line using black hole register,
+      " then begin a new line below
+      call feedkeys(bracket . "\<Esc>k\"_ddo")
+  endif
+  endfor
+endfunction
+
+let g:funcsToExecOnCR = g:funcsToExecOnCR + ['MatchBracketPos()']
 autocmd BufEnter,WinEnter * call ColorCol()
