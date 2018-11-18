@@ -3,7 +3,8 @@
 
 let s:path = "~/.vim/vimrc.d/"
 
-let s:fileList = ["statusline.vim",
+let s:fileList = ["execOnReturn.vim",
+                 \"statusline.vim",
                  \"python.vim",
                  \"continuation.vim",
                  \"fakeCapsLock.vim",
@@ -13,7 +14,6 @@ let s:fileList = ["statusline.vim",
                  \"toggleHyphen.vim",
                  \"toggleSetComplete.vim",
                  \"numbering.vim",
-                 \"execOnReturn.vim",
                  \"indentation.vim",
                  \"completion.vim",
                  \"autoComment.vim",
