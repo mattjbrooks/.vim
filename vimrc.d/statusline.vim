@@ -10,11 +10,11 @@
 " Show if hyphen or full stop in list of word characters (see toggleHyphen.vim and toggleDot.vim)
 
 function StatuslineString(...)
-  " If optional argument is provided to StatuslineString containing 'fullpath'
+  " If optional argument is provided to StatuslineString containing 'fullpath':
   if a:0 == 1 && a:1 =~ 'fullpath'
-    let pathing = '%F'
+    let pathing = '%F' " use full paths in statusline
   else
-    let pathing = '%f'
+    let pathing = '%f' " use paths relative to the current directory
   endif
   let statuslineString = '%{&ff!=''unix''?''[WARNING:\ ''.&ff.''\ fileformat]\ '':''''}%<'
   let statuslineString .= pathing
@@ -32,9 +32,9 @@ highlight StatusLineNC cterm=none ctermfg=242 ctermbg=235
 
 " change statusline colours in insert mode
 autocmd InsertEnter * highlight StatusLine cterm=none ctermfg=252 ctermbg=236
-autocmd InsertLeave * silent call SetStatuslineBackground()
+autocmd InsertLeave * silent call SetStatuslineHighlighting()
 
-function SetStatuslineBackground()
+function SetStatuslineHighlighting()
   if tabpagewinnr(tabpagenr(), '$') == 1
     highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
   else
@@ -59,5 +59,5 @@ function CheckFilename()
   endif
 endfunction
 
-autocmd WinEnter,BufEnter,TabEnter * silent call SetStatuslineBackground()
+autocmd WinEnter,BufEnter,TabEnter * silent call SetStatuslineHighlighting()
 autocmd BufEnter * silent call CheckFilename()
