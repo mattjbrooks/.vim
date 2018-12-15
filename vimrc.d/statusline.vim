@@ -3,7 +3,6 @@
 
 " Modified statusline example:
 " set statusline=%{&ff!='unix'?'[WARNING:\ '.&ff.'\ fileformat]\ ':''}%<%f\ %h%{&mod?'[modified]\ ':''}%{ReturnCaps()}%{ReturnDot()}%{ReturnHyphen()}%r%=%-14.(%l,%c%V%)\ %P
-
 " Show warning if fileformat is not unix
 " Make modified flag more obvious
 " Show if fake caps is active (see fakeCapsLock.vim)
@@ -20,26 +19,6 @@ function StatuslineString(...)
   let statuslineString .= '\ %h%{&mod?''[modified]\ '':''''}%{ReturnCaps()}%{ReturnDot()}%{ReturnHyphen()}%r%=%-14.(%l,%c%V%)\ %P'
   return statuslineString
 endfunction
-
-execute 'set statusline=' . StatuslineString('')
-
-" statusline visible
-set laststatus=2
-
-" set highlighting for non-current windows
-highlight StatusLineNC cterm=none ctermfg=242 ctermbg=235
-
-" change statusline colours in insert mode
-autocmd InsertEnter * highlight StatusLine cterm=none ctermfg=252 ctermbg=236
-autocmd InsertLeave * silent call SetHighlighting()
-
-function SetHighlighting()
-  if tabpagewinnr(tabpagenr(), '$') == 1
-    highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
-  else
-    highlight StatusLine cterm=bold ctermfg=032 ctermbg=236
-  endif
-endfunction()
 
 function CheckFilename()
   " Check if the tail of the filename of the current buffer matches any others which are listed.
@@ -58,5 +37,23 @@ function CheckFilename()
   endif
 endfunction
 
+function SetHighlighting()
+  if tabpagewinnr(tabpagenr(), '$') == 1
+    highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
+  else
+    highlight StatusLine cterm=bold ctermfg=032 ctermbg=236
+  endif
+endfunction()
+
+execute 'set statusline=' . StatuslineString('')
+
+" statusline visible
+set laststatus=2
+
+" set highlighting for non-current windows
+highlight StatusLineNC cterm=none ctermfg=242 ctermbg=235
+
 autocmd WinEnter,BufEnter,TabEnter * silent call SetHighlighting()
 autocmd BufEnter * silent call CheckFilename()
+autocmd InsertEnter * highlight StatusLine cterm=none ctermfg=252 ctermbg=236
+autocmd InsertLeave * silent call SetHighlighting()
