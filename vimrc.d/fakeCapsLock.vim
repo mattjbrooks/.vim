@@ -1,3 +1,8 @@
+if exists('g:loaded_fakeCapsLock')
+  finish
+endif
+let g:loaded_fakeCapsLock = 1
+
 " shift+tab in insert mode as fake caps lock (have caps remapped to Esc)
 let s:fakeCapsLock = 0
 
