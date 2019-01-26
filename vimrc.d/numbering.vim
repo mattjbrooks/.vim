@@ -1,3 +1,8 @@
+if exists('g:loaded_numbering')
+  finish
+endif
+let g:loaded_numbering = 1
+
 " <F2> to toggle between sequential and relative line numbering
 function SetupVar()
   if !exists("b:relative_numbering")
