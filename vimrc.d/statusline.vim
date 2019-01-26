@@ -1,3 +1,8 @@
+if exists('g:loaded_statusline')
+  finish
+endif
+let g:loaded_statusline = 1
+
 " The default statusline for reference:
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
