@@ -1,6 +1,6 @@
 " On carriage return execute the functions named in g:funcsToExecOnCR
-" (used in completion.vim and indentation.vim to respond to
-" carriage return by adding functions to the g:funcsToExecOnCR list)
+" (used in completion.vim, indentation.vim and python.vim in personal/
+" to respond to carriage return by adding functions to the g:funcsToExecOnCR list)
 
 let g:funcsToExecOnCR = []
 
