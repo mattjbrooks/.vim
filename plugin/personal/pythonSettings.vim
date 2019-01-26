@@ -1,7 +1,7 @@
-if exists('g:loaded_python')
+if exists('g:loaded_pythonSettings')
   finish
 endif
-let g:loaded_python = 1
+let g:loaded_pythonSettings = 1
 
 " add #! /usr/bin/python3 header to start of .py files then use normal mode G
 " to move cursor to last line
