@@ -1,3 +1,8 @@
+if exists('g:loaded_toggleDot')
+  finish
+endif
+let g:loaded_toggleDot= 1
+
 " <F3> to toggle full stop in list of word characters
 function DotToggle()
   if &iskeyword =~ ',\.'
