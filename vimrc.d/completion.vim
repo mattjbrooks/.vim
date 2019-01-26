@@ -1,5 +1,10 @@
 " Spaghetti for snippets and tab completion
 
+if exists('g:loaded_completion')
+  finish
+endif
+let g:loaded_completion = 1
+
 function SetBufferVariables()
   for var in ["b:navigating_snippet", "b:multiline_snippet_entry", "b:found_entry"]
     if !exists(var)
