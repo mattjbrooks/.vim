@@ -1,7 +1,7 @@
-if exists('g:loaded_tmux')
+if exists('g:loaded_tmuxSettings')
   finish
 endif
-let g:loaded_tmux = 1
+let g:loaded_tmuxSettings = 1
 
 " Configure keys when we are in tmux and TERM is screen(-256color) rather
 " than xterm(-256color).  Using Ctrl-v in insert mode then desired key(s) to
