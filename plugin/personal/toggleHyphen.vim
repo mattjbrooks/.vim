@@ -3,7 +3,7 @@ if exists('g:loaded_toggleHyphen')
 endif
 let g:loaded_toggleHyphen = 1
 
-" <F4> to toggle hyphen in list of word characters
+" <leader>- to toggle hyphen in list of word characters
 function HyphenToggle()
   if &iskeyword =~ ',-'
     setlocal iskeyword-=-
@@ -13,8 +13,7 @@ function HyphenToggle()
   return ''
 endfunction
 
-nnoremap <silent> <F4> :call HyphenToggle()<CR>
-inoremap <F4> <C-R>=HyphenToggle()<CR>
+nnoremap <silent> <leader>- :call HyphenToggle()<CR>
 
 " Used to indicate if hyphen is in list of word characters in statusline
 function ReturnHyphen()
