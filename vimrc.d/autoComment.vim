@@ -1,3 +1,8 @@
+if exists('g:loaded_autoComment')
+  finish
+endif
+let g:loaded_autoComment = 1
+
 function CommentSymbols()
   let start_of_comment = ''
   let end_of_comment = ''
