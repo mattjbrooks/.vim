@@ -1,3 +1,8 @@
+if exists('g:loaded_toggleNERDTree')
+  finish
+endif
+let g:loaded_toggleNERDTree = 1
+
 " Use <leader>t to toggle NERDTree.  Opens at directory of current file
 " (equalizing windows first)
 function TreeToggle()
