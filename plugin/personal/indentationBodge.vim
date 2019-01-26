@@ -1,4 +1,4 @@
-" Workaround to improve indentation for files which combine html with javascript and/or python
+" Workaround to improve indentation for files which combine html with javascript and/or django templates
 
 if exists('g:loaded_indentationBodge')
   finish
