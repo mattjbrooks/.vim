@@ -1,4 +1,8 @@
 " Based on this post by Deltaray - http://www.climagic.org/txt/vim-color-under-cursor-function.html
+if exists('g:loaded_displayColor.vim')
+  finish
+endif
+let g:loaded_displayColor = 1
 
 function XDisplayColor(color)
   let display_command = "display -size 200x200 xc:'" . a:color . "'"
