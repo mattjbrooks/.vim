@@ -1,3 +1,8 @@
+if exists('g:loaded_python')
+  finish
+endif
+let g:loaded_python = 1
+
 " add #! /usr/bin/python3 header to start of .py files then use normal mode G
 " to move cursor to last line
 " autocmd BufNewFile *.py silent! 0r ~/.vim/headers/py3header | normal G
