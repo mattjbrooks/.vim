@@ -1,5 +1,10 @@
 " Workaround to improve indentation for files which combine html with other languages
 
+if exists('g:loaded_indentation')
+  finish
+endif
+let g:loaded_indentation = 1
+
 let s:djangoTemplates = 1 " toggles whether to switch ft to htmldjango if line contains {# or {%
 
 autocmd BufNewFile,BufRead *.html,*.xhtml setl cinwords+=case,default
