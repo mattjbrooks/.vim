@@ -1,3 +1,8 @@
+if exists('g:loaded_toggleClipboard')
+  finish
+endif
+let g:loaded_toggleClipboard = 1
+
 " <F5> in normal mode to toggle between default behaviour of yank/paste/delete
 " and using clipboard (with <leader>d to delete to the clipboard in visual mode)
 " Requires version of vim with clipboard support (check for +clipboard in output of
