@@ -1,3 +1,8 @@
+if exists('g:loaded_toggleHyphen')
+  finish
+endif
+let g:loaded_toggleHyphen = 1
+
 " <F4> to toggle hyphen in list of word characters
 function HyphenToggle()
   if &iskeyword =~ ',-'
