@@ -1,4 +1,4 @@
-" Workaround to improve indentation for files which combine html with other languages
+" Workaround to improve indentation for files which combine html with javascript and/or python
 
 if exists('g:loaded_indentation')
   finish
