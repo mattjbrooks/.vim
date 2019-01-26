@@ -1,3 +1,8 @@
+if exists('g:loaded_tmux')
+  finish
+endif
+let g:loaded_tmux = 1
+
 " Configure keys when we are in tmux and TERM is screen(-256color) rather
 " than xterm(-256color).  Using Ctrl-v in insert mode then desired key(s) to
 " produce control code.  Needs 'set-window-option -g xterm-keys on' in
