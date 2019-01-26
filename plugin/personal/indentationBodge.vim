@@ -1,9 +1,9 @@
 " Workaround to improve indentation for files which combine html with javascript and/or python
 
-if exists('g:loaded_indentation')
+if exists('g:loaded_indentationBodge')
   finish
 endif
-let g:loaded_indentation = 1
+let g:loaded_indentationBodge = 1
 
 let s:djangoTemplates = 1 " toggles whether to switch ft to htmldjango if line contains {# or {%
 
