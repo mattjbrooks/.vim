@@ -1,3 +1,8 @@
+if exists('g:loaded_continuation')
+  finish
+endif
+let g:loaded_continuation = 1
+
 " By default disable comment continuation
 autocmd BufWinEnter,BufEnter * set formatoptions-=cr | set formatoptions-=o | hi comment ctermbg=none
 
