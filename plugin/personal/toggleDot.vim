@@ -3,7 +3,7 @@ if exists('g:loaded_toggleDot')
 endif
 let g:loaded_toggleDot= 1
 
-" <F3> to toggle full stop in list of word characters
+" <leader>. to toggle full stop in list of word characters
 function DotToggle()
   if &iskeyword =~ ',\.'
     setlocal iskeyword-=.
@@ -13,8 +13,7 @@ function DotToggle()
   return ''
 endfunction
 
-nnoremap <silent> <F3> :call DotToggle()<CR>
-inoremap <F3> <C-R>=DotToggle()<CR>
+nnoremap <silent> <leader>. :call DotToggle()<CR>
 
 " Used to indicate if full stop is in list of word characters in statusline
 function ReturnDot()
