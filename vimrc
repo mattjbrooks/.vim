@@ -19,6 +19,7 @@ set shortmess+=I                " disable intro screen
 set lazyredraw                  " don't redraw for untyped actions
 set sessionoptions-=folds       " don't store folds in sessions
 set noeb vb t_vb=               " disable bell and visualbell
+set nomodeline                  " disable modelines
 
 " disable cursor keys in normal mode
 nnoremap <Up> <NOP>
