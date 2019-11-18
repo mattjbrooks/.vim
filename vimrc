@@ -148,6 +148,11 @@ autocmd BufEnter *
 " Sudow command to write with sudo
 command Sudow execute 'w !sudo tee "%" > /dev/null && sudo -k'
 
+" Set list of path directories to include the directory in which vim
+" was started and it's subdirectories, in addition to the directory of
+" the current file and the current directory.
+exec 'set path=.,,,' . getcwd() . '/**'
+
 " Avoid E173 on quit
 if argc() > 1
   silent blast
