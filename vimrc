@@ -148,13 +148,12 @@ autocmd BufEnter *
 " Sudow command to write with sudo
 command Sudow execute 'w !sudo tee "%" > /dev/null && sudo -k'
 
-" Set list of path directories to include the directory in which vim
-" was started and it's subdirectories, in addition to the directory of
-" the current file and the current directory.
-exec 'set path+=' . getcwd() . '/**'
-
 " Remove /usr/include from list of path directories
 set path-=/usr/include
+
+" <leader>f to search for a file to edit in the directory
+" in which vim was started
+execute 'nnoremap <leader>f :edit ' . getcwd() . '/**/'
 
 " Avoid E173 on quit
 if argc() > 1
