@@ -228,11 +228,10 @@ function CompletionString(syntax_item)
     return ''
   endif
   if &ft == "htmldjango"
-    let positioning = "A"
+    return tag_complete . "A"
   else
-    let positioning = "==A"
+    return tag_complete . "==A"
   endif
-  return tag_complete . positioning
 endfunction
 
 " Iterate through syntax list looking for completion string
