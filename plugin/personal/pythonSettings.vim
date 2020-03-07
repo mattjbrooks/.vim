@@ -22,7 +22,7 @@ function MatchBracketPos()
       " Add bracket, move up and delete line using black hole register,
       " then begin a new line below
       call feedkeys(bracket . "\<Esc>k\"_ddo")
-  endif
+    endif
   endfor
 endfunction
 
