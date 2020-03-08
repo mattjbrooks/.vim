@@ -1,9 +1,3 @@
-" Tab settings for python
-setl tabstop=4
-setl expandtab
-setl shiftwidth=4
-setl softtabstop=4
-
 " Highlight column 80
 setl cc=80
 
