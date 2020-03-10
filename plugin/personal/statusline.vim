@@ -3,15 +3,13 @@ if exists('g:loaded_statusline')
 endif
 let g:loaded_statusline = 1
 
-" The default statusline for reference:
+" Default statusline:
 " set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
-" Modified statusline example:
-" set statusline=%{&ff!='unix'?'[WARNING:\ '.&ff.'\ fileformat]\ ':''}%<%f\ %h%{&mod?'[modified]\ ':''}%{ReturnCaps()}%{ReturnDot()}%{ReturnHyphen()}%r%=%-14.(%l,%c%V%)\ %P
-" Show warning if fileformat is not unix
-" Make modified flag more obvious
-" Show if fake caps is active (see fakeCapsLock.vim)
-" Show if hyphen or full stop in list of word characters (see toggleHyphen.vim and toggleDot.vim)
+" Currently modified to show warning if fileformat is not unix,
+" make modified flag more visible, show if fake caps lock is active,
+" or if hyphen or full stop in list of word characters.
+" (see functions in fakeCapsLock.vim, toggleHyphen.vim, toggleDot.vim)
 
 function StatuslineString(...)
   if a:0 == 1 && a:1 =~ 'fullpath' " if optional argument is provided to StatuslineString containing 'fullpath'
