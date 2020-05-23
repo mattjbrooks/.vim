@@ -20,7 +20,7 @@ set lazyredraw                  " don't redraw for untyped actions
 set sessionoptions-=folds       " don't store folds in sessions
 set noeb vb t_vb=               " disable bell and visualbell
 set nomodeline                  " disable modelines
-set backupcopy                  " preserve any special attributes on save
+set backupcopy=yes              " preserve any special attributes on save
 
 " disable cursor keys in normal mode
 nnoremap <Up> <NOP>
