@@ -102,8 +102,8 @@ nnoremap <silent> <leader><leader> :let @/ = ""<CR>:echo<CR>
 " (left in case set autochdir ever needs to be disabled)
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 
-" SS command to save current session at ~/.vimsession
-command SS mksession! ~/.vimsession | echo "Saved current session"
+" S command to save current session at ~/.vimsession
+command S mksession! ~/.vimsession | echo "Saved current session"
 
 " L command to load session stored at ~/.vimsession
 command L source ~/.vimsession | syn sync fromstart | let @/ = ""
