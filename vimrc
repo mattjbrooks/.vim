@@ -108,8 +108,8 @@ command SS mksession! ~/.vimsession | echo "Saved current session"
 " L command to load session stored at ~/.vimsession
 command L source ~/.vimsession | syn sync fromstart | let @/ = ""
 
-" <leader>J to join lines (due to next mapping)
-nnoremap <leader>J J
+" \ to join lines (due to next mapping)
+nnoremap <Bslash> J
 
 " J and K to move to prev/next buffer
 nnoremap <silent> J :bprev<CR>
