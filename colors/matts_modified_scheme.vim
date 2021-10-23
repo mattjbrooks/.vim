@@ -43,6 +43,7 @@ highlight MoreMsg ctermfg=white
 highlight StatusLine cterm=bold ctermfg=032 ctermbg=none
 highlight StatusLineNC cterm=none ctermfg=DarkGrey ctermbg=none
 highlight ColorColumn ctermbg=235
+highlight CursorColumn ctermbg=235
 
 " Vertical split highlighting
 highlight clear VertSplit
